@@ -1,0 +1,8 @@
+Please click following link to activate:
+
+http://{{site.domain}}/account/activate/{{activation_key}}/
+
+Above link will expire in {{expiration_days}} days.
+
+Thank you.
+Coosta Dev Team

@@ -1,0 +1,417 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+        @media only screen and (min-width : 268px){
+            #property_container {
+                width: 100%;
+             }
+        }
+
+        @media only screen and (min-width : 768px){
+            #property_container {
+                width: 80%;
+             }
+        }
+
+        @media only screen and (min-width : 1200px){
+            #property_container {
+                width: 80%;
+             }
+        }
+        #image_stack{
+            background-repeat: repeat-x;
+            height:106px;
+            margin-top: 13px;
+            overflow-y: auto;
+        }
+        #image_stack .existingTag{
+            width: 100px;
+            height: 106px;
+            line-height: 20px;
+            margin-top: 0px;
+            margin-left: 9px;
+            margin-right:0px;
+            display:inline-block;
+            position:relative;
+        }
+        #image_stack .existingTag a {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            color: white;
+            width: 10px;
+            height: 10px;
+            background-color: #3AD4A7;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 7px;
+            line-height: 9px;
+        }
+        #image_stack .existingTag img {
+            padding: 5px;
+        }
+    </style>
+<p></p>
+<br/>
+<br/>
+<p></p>
+<br/>
+<div id="property_container" class="mobile_container_fluid container-fluid">
+    <form action="" id="property_form" method="post" onsubmit="return save_property_data('save')">{% csrf_token %}
+        <div class="row">
+            <div class="col-md-12 col-xs-12">
+                <h3 class="text-uppercase" style="color:#3AD4A7;"><b>Edit Property Details</b></h3>
+                <br>
+                <div id="step2">
+                    <div class="row">
+                        <div class="col-md-6 col-xs-12 col-sm-10">
+                            <div class="form-group">
+                                <label for="property_title">Add Property Title</label>
+                                <input type="text" class="form-control" id="property_title" name="property_title" value="">
+                                <span style="color:black;margin-top:-28px;margin-right:8px;" class="fa fa-pencil pull-right"></span>
+                                <span id="property_title_error"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-xs-12 col-sm-10">
+                            <div class="form-group">
+                                <label for="property_title">Address</label>
+                                <input type="text" class="form-control" id="address2" name="address2" value="">
+                                <span style="color:black;margin-top:-28px;margin-right:8px;" class="fa fa-pencil pull-right"></span>
+                                <span id="address2_error"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3 col-xs-12 col-sm-5">
+                            <div class="form-group">
+                                <label for="city">City</label>
+                                <input type="text" class="form-control" id="city1" name="city1" value="">
+                                <span style="color:black;margin-top:-28px;margin-right:8px;" class="fa fa-pencil pull-right"></span>
+                                <span id="city1_error"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-xs-12 col-sm-5">
+                            <div class="form-group">
+                                <label for="state">State</label>
+                                <input type="text" class="form-control" id="state1" name="state1" value="">
+                                <span style="color:black;margin-top:-28px;margin-right:8px;" class="fa fa-pencil pull-right"></span>
+                                <span id="state1_error"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3 col-xs-12 col-sm-5">
+                            <div class="form-group">
+                                <label for="zipcode">ZipCode</label>
+                                <input type="text" class="form-control" id="zipcode" name="zipcode" value="">
+                                <span style="color:black;margin-top:-28px;margin-right:8px;" class="fa fa-pencil pull-right"></span>
+                                <span id="zipcode_error"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-6 col-xs-10">
+                            <h4 style="color:#3AD4A7;"><b>PROPERTY HEIGHLIGHTS</b></h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3 col-xs-6">
+                            <div class="form-group">
+                                <label for="home_type">Home Type</label>
+                                <select style="height: 10%;" id="home_type" class="form-control">
+                                    <option value="Single family">Single family</option>
+                                    <option value="Condo">Condo</option>
+                                    <option value="Townhouse">Townhouse</option>
+                                    <option value="Multi family">Multi family</option>
+                                    <option value="Apartment">Apartment</option>
+                                    <option value="Mobile / Manufactured">Mobile / Manufactured</option>
+                                    <option value="Coop Unit">Coop Unit</option>
+                                    <option value="Vacant land">Vacant land</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-xs-12 col-sm-10" style="padding:0px;">
+                            <div class="col-md-3 col-xs-6 col-sm-3">
+                                <div class="form-group">
+                                    <label for="beds">Beds</label>
+                                    <input type="text" class="form-control" name="beds" id="beds" value="0">
+                                    <span style="color:black;margin-top:-28px;margin-right:8px;" class="fa fa-pencil pull-right"></span>
+                                    <span id="beds_error"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-xs-6 col-sm-3">
+                                <div class="form-group">
+                                    <label for="baths">Baths</label>
+                                    <input type="text" class="form-control" name="baths" id="baths" value="0">
+                                    <span style="color:black;margin-top:-28px;margin-right:8px;" class="fa fa-pencil pull-right"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-xs-6 col-sm-3">
+                                <div class="form-group">
+                                    <label for="rooms">Rooms</label>
+                                    <input type="text" class="form-control" name="rooms" id="rooms" value="0">
+                                    <span style="color:black;margin-top:-28px;margin-right:8px;" class="fa fa-pencil pull-right"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-xs-6 col-sm-3">
+                                <div class="form-group">
+                                    <label for="property_size">Floor Size (Sq Ft)</label>
+                                    <input type="text" class="form-control" name="property_size" id="property_size" value="0">
+                                    <span style="color:black;margin-top:-28px;margin-right:8px;" class="fa fa-pencil pull-right"></span>
+                                    <span id="property_size_error"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-xs-12 col-sm-10" style="padding:0px;">
+                            <div class="col-md-3 col-xs-6 col-sm-3">
+                                <div class="form-group">
+                                    <label for="floors">Floors</label>
+                                    <input type="text" class="form-control" name="floors" id="floors" value="0">
+                                    <span style="color:black;margin-top:-28px;margin-right:8px;" class="fa fa-pencil pull-right"></span>
+                                    <span id="floors_error"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-xs-6 col-sm-3">
+                                <div class="form-group">
+                                    <label for="basements">Basements</label>
+                                    <input type="text" class="form-control" name="basements" id="basements" value="0">
+                                    <span style="color:black;margin-top:-28px;margin-right:8px;" class="fa fa-pencil pull-right"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-xs-6 col-sm-3">
+                                <div class="form-group">
+                                    <label for="roof">Roof</label>
+                                    <input type="checkbox" class="form-control" name="roofs" id="roofs"
+                                           style="width:25%;">
+                                    <!--<span style="color:black;margin-top:-28px;margin-right:8px;" class="fa fa-pencil pull-right"></span>-->
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-xs-6 col-sm-3">
+                                <div class="form-group">
+                                    <label for="year_built">Year Built</label>
+                                    <input type="text" class="form-control" name="year_built" id="year_built" value="">
+                                    <span style="color:black;margin-top:-28px;margin-right:8px;" class="fa fa-pencil pull-right"></span>
+                                    <span id="yaer_built_error"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-xs-12 col-sm-10">
+                            <div class="form-group">
+                                <label for="description">Add Description</label>
+                                <textarea class="form-control" rows="3" name="description" id="description"></textarea>
+                                <span style="color:black;margin-top:-70px;margin-right:8px;" class="fa fa-pencil pull-right"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-xs-12 col-sm-10">
+                            <div class="form-group">
+                                <label for="features">Add Features</label>
+                                <textarea class="form-control" rows="3" name="features" id="features"></textarea>
+                                <span style="color:black;margin-top:-70px;margin-right:8px;" class="fa fa-pencil pull-right"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4 style="color:#3AD4A7;"><b>ADD PHOTOS</b></h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 col-xs-12 col-sm-12" id="image_stack">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 col-xs-12 col-sm-12">
+                            <div action="/api/images/" class="dropzone decoration" id="my-awesome-dropzone" method="POST" enctype="multipart/form-data" style="padding: 15px;min-height: 100%;max-height: 100%;border: none;">
+                                <div class="dz-message" data-dz-message style="margin: 0;top: 0px;height: 100%;">
+                                    <div class="col-md-12" style="background-color: #ccc;padding: 0px;height: 100%;">
+                                        <p class="text-center text-uppercase" style="color: #333;padding-top: 16px;"><b>Drag & drop or</b>
+                                            <span style="color:red"><b style="color:#3AD4A7;">upload</b></span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <p></p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4 style="color:#3AD4A7;"><b>CHANGE PROPERTY PRICE</b></h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8 col-xs-12 col-sm-12">
+                            <!--<p style="color:black;"><b>STEP 3</b> : Add Valuation Link</p>-->
+                            <p id="zestimate" style="color:black;display:none;"><b>Zestimate Price</b> : <span id="zestimate_price"></span></p>
+                            <div class="form-group">
+                                <label class="col-md-4 col-xs-4 col-sm-4" style="    margin-top: 5px;">Enter Price: &nbsp;</label>
+                                <input type="text" class="form-control col-md-4 col-xs-8 col-sm-12" id="property_price" name="property_price"
+                                       value="" placeholder="Enter Price" style="width:40%">
+                                <span id="property_price_error"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-3 col-xs-12 col-sm-3 btn-wrapper">
+                            <button type="button" class="btn button-1 gradient-bg three-sharp-edge-l"
+                                    onclick="preview_property()" style="color:white;">PREVIEW</button>
+                        </div>
+                        <div class="col-md-3 col-xs-12 col-sm-3 btn-wrapper">
+                            <button type="submit" class="btn button-1 gradient-bg three-sharp-edge-l"
+                                    onclick="return editPropertyValidation()" style="color:white;">SAVE CHANGES</button>
+                        </div>
+                    </div>
+                    <br />
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<br />
+
+<script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+<!--<script src="/static/js/apis/property_apis.js"></script>-->
+<!--<script src="/static/js/main.js"></script>-->
+<script src="/static/js/dropzone/dropzone.js"></script>
+<link rel="stylesheet" href="/static/css/dropzone/dropzone.css">
+<link rel="stylesheet" href="/static/css/dropzone/basic.css">
+
+<script>
+    var property_data = "";
+    $("document").ready(function(){
+        render_property("{{property_id}}");
+    });
+
+    function preview_property(){
+        editPropertyValidation();
+        save_property_data('preview');
+    }
+
+    function render_property(filter){
+        var url = property_base_url + filter;
+        property_data = get_property(url).responseJSON;
+        var csrftoken = getCookie('csrftoken');
+        var token = { "X-CSRFToken": csrftoken}
+        //render_images(property_data.images)
+        if(property_data.property_title != null){
+            $("#property_title").val(property_data.property_title.toString());
+        }
+        $("#address2").val(property_data.address);
+        $("#city1").val(property_data.city);
+        $("#state1").val(property_data.state);
+        $("#zipcode").val(property_data.zip_code);
+        $("#home_type").val(property_data.home_type);
+        $("#beds").val(property_data.beds);
+        $("#baths").val(property_data.baths);
+        $("#rooms").val(property_data.rooms);
+        $("#property_size").val(property_data.property_size);
+        $("#floors").val(property_data.floors);
+        $("#basement").val(property_data.basement);
+        $("#roofs").prop("checked", property_data.roof);
+        $("#year_built").val(property_data.year_built);
+        $("#description").val(property_data.description);
+        $("#features").val(property_data.other_features);
+        if(property_data.completed){
+            $("#property_price").val("$"+ parseInt(property_data.property_value.toString().replace(/[$,]+/g,"")).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+        }
+        else{
+            $("#zestimate_price").html("$"+ parseInt(property_data.property_value.toString().replace(/[$,]+/g,"")).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+            $("#zestimate").show();
+        }
+        for(var i=0; i<property_data['images'].length; i++){
+            $("#image_stack").prepend('<div class="existingTag"><a href="#" onclick="delete_image('+property_data['images'][i]['id']+')" class="closeButton">x</a><img id="'+property_data['images'][i]['id']+'" style="height: 106px;width: 100px;" src="'+property_data['images'][i]['image']+'" /></div>');
+        }
+    }
+    function save_property_data(save_type){
+        var property_data_to_update = {"user": "/api/users/"+"{{user.id}}"+"/"};
+        property_data_to_update.property_title = $('#property_title').val();
+        property_data_to_update.address = $('#address2').val();
+        property_data_to_update.city = $('#city1').val();
+        property_data_to_update.state = $('#state1').val();
+        property_data_to_update.zip_code = $('#zipcode').val();
+        property_data_to_update.home_type = $('#home_type').val();
+        property_data_to_update.beds = $('#beds').val();
+        property_data_to_update.baths = $('#baths').val();
+        property_data_to_update.rooms = $('#rooms').val();
+        property_data_to_update.floors = $('#floors').val();
+        property_data_to_update.basement = $('#basements').val();
+        property_data_to_update.roof = $("#roofs").is(":checked");
+        property_data_to_update.year_built = $('#year_built').val();
+        property_data_to_update.description = $('#description').val();
+        property_data_to_update.other_features = $('#features').val();
+        property_data_to_update.property_value = parseInt($("#property_price").val().replace(/[$,]+/g,""));
+        property_data_to_update.property_size = $('#property_size').val();
+        property_data_to_update.completed = true;
+        property_data_to_update.active = true;
+        property_data_to_update.status = "/api/propertystatus/4/";
+        var url = '/api/property/'+ "{{property_id}}" +'/';
+        var property_update = update_property(url, property_data_to_update);
+        console.log(property_update)
+        if(property_update.status == 200){
+            noty({text: 'Property updated!',
+              layout: 'topCenter',
+              closeWith: ['click', 'hover'],
+              type: 'success'});
+            if(save_type == "preview"){
+                window.location.href = "/property/temp_preview/{{property_id}}/";
+            }
+            else{
+                window.location.href ="/property/preview/{{property_id}}/"
+            }
+        }
+        else{
+            noty({text: 'Property not updated!',
+              layout: 'topCenter',
+              closeWith: ['click', 'hover'],
+              type: 'error'});
+        }
+        return false;
+
+    }
+    $( document ).ready(function() {
+        $("#property_price").on("blur", function(){$("#property_price").val("$"+ parseInt($("#property_price").val().replace(/[$,]+/g,"")).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'))});
+        csrftoken = getCookie('csrftoken');
+        set_ajax_token();
+        Dropzone.options.myAwesomeDropzone = {
+            maxFilesize: 20, // Size in MB
+            acceptedFiles: ".png,.jpg,.jpeg",
+            addRemoveLinks: false,
+            removedfile: function(file) {
+              var fileRef;
+              return (fileRef = file.previewElement) != null ?
+                      fileRef.parentNode.removeChild(file.previewElement) : void 0;
+            },
+
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            success: function(file, response) {
+                $(".dz-preview").remove();
+                var new_image = post_property_images({"image": response['url'], "property": property_data['url']});
+                var new_image_obj = get_properties_images_obj('/api/property_images/'+new_image['responseJSON']['id']+'/')['responseJSON']['image'];
+                $("#image_stack").prepend('<div class="existingTag"><a href="#" onclick="delete_image('+new_image_obj['id']+')" class="closeButton">x</a><img id="'+new_image_obj['id']+'" style="height: 106px;width: 100px;" src="'+new_image_obj['image']+'" /></div>');
+            }
+
+        };
+    });
+
+    function delete_image(id){
+        var response = delete_properties_images_obj('/api/images/'+id+'/');
+        $("#"+id).parent().remove();
+    }
+</script>
+{% endblock content%}
+

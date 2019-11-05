@@ -1,0 +1,244 @@
+{% extends "dashboard_admin/dashboard_admin_base.html" %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Dashboard</h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <h1 class="">Properties</h1>
+            </div>
+            <div class="col-lg-3 col-md-6"></div>
+            <div class="col-lg-2 col-md-6"></div>
+            <div class="col-lg-3 col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-home fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge">{{ total_property_count }}</div>
+                                <div>Total Properties!
+                                    <form  action="." method="post">
+                                     {% csrf_token %}
+                                        <input type="hidden" name="download" />
+                                        <button type="submit" class="" aria-label="Help" style="border-bottom-left-radius:5px; border-top-left-radius: 5px;">
+                                            <i class="fa fa-download" style="margin-top:-10px;"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-1"></div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <div class="panel panel-yellow">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-home fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                {% if ca_property_count %}
+                                    <div class="huge">{{ ca_property_count }}</div>
+                                {% else %}
+                                    <div class="huge">0</div>
+                                {% endif %}
+                                <div>
+                                    CA!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--<a href="#">-->
+                        <!--<div class="panel-footer">-->
+                            <!--<span class="pull-left">View Details</span>-->
+                            <!--<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>-->
+                            <!--<div class="clearfix"></div>-->
+                        <!--</div>-->
+                    <!--</a>-->
+                </div>
+            </div>
+            <div class="col-lg-1"></div>
+            <div class="col-lg-3 col-md-6">
+                <div class="panel panel-red">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-home fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                {% if san_francisco_property_count %}
+                                    <div class="huge">{{ san_francisco_property_count }}</div>
+                                {% else %}
+                                    <div class="huge">0</div>
+                                {% endif %}
+                                <div>San Francisco!</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-1"></div>
+            <div class="col-lg-3 col-md-6">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-home fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                {% if los_angeles_property_count %}
+                                    <div class="huge">{{ los_angeles_property_count }}</div>
+                                {% else %}
+                                    <div class="huge">0</div>
+                                {% endif %}
+                                <div>Los Angeles!</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+        <hr/>
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <h1 class="">Users</h1>
+            </div>
+            <div class="col-lg-3 col-md-6"></div>
+            <div class="col-lg-2 col-md-6"></div>
+            <div class="col-lg-3 col-md-6">
+                <div class="panel panel-green">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-users fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge">{{ total_user_count }}</div>
+                                <div>Total Users!</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-1"></div>
+        </div>
+
+        <hr/>
+        <div class="row">
+            <div class="col-lg-6 col-md-6">
+                <h1 class="">Escrow Property</h1>
+            </div>
+            <div class="col-lg-2 col-md-6"></div>
+            <div class="col-lg-3 col-md-6">
+                <div class="panel panel-yellow">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-home fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge"><span id="escrow_count"></span></div>
+                                <div>Total Escrow Property</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-1"></div>
+        </div>
+
+        <hr/>
+        <div class="row">
+            <div class="col-lg-6 col-md-6">
+                <h1 class="">Non Pre-Approved Users</h1>
+            </div>
+            <div class="col-lg-2 col-md-6"></div>
+            <div class="col-lg-3 col-md-6">
+                <div class="panel panel-red">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-user fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge"><span id="non_pre_approved_user_count"></span></div>
+                                <div style="font-size:12px;">Total Non Pre-Approved</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-1"></div>
+        </div>
+
+        <hr/>
+        <div class="row">
+            <div class="col-lg-6 col-md-6">
+                <h1 class="">Flagged Properties</h1>
+            </div>
+            <div class="col-lg-2 col-md-6"></div>
+            <div class="col-lg-3 col-md-6">
+                <div class="panel panel-red">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-home fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge"><span id="flagged_properties_count"></span></div>
+                                <div style="font-size:12px;">Total Flagged Properties</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-1"></div>
+        </div>
+
+    </div>
+    <!-- /#page-wrapper -->
+    {% block footer_scripts %}
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script src="/static/js/auth.js?{% now 'U' %}"></script>
+    <script src="/static/js/apis/user_apis.js?{% now 'U' %}"></script>
+    <script src="/static/js/apis/escrow_api.js?{% now 'U' %}"></script>
+    <script src="/static/js/apis/flags_apis.js?{% now 'U' %}"></script>
+    <script type="text/javascript">
+        $("document").ready(function(){
+            var csrftoken = getCookie('csrftoken');
+            var data = { "X-CSRFToken": csrftoken}
+            //code for getting total count of Escrow Property
+            var url = "/api/escrowproperty/";
+            var escrow_property_object = get_escrow_property(data, url).responseJSON;
+            var escrow_property_count = escrow_property_object.count;
+            $("#escrow_count").text(escrow_property_count);
+            //End of code for getting total count of Escrow Property
+
+            //code for getting total count of Non Pre-Approved User
+            var non_pre_approved_user_url = "/api/non_pre_approved_user/";
+            var non_pre_approved_user_object = get_non_pre_approved_user(data, non_pre_approved_user_url).responseJSON;
+            var non_pre_approved_user_count = non_pre_approved_user_object.count;
+            $("#non_pre_approved_user_count").text(non_pre_approved_user_count);
+            //End of code for getting total count of Non Pre-Approved User
+
+            // Count Flagged Properties
+            var flagged_property_count = get_all_flagged_properties().responseJSON.count;
+            $("#flagged_properties_count").text(flagged_property_count);
+            //End Count Flagged Properties
+        });
+    </script>
+{% endblock footer_scripts %}
+{% endblock content %}

@@ -1,0 +1,110 @@
+{% extends "dashboard_admin/dashboard_admin_base.html" %}
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Flagged Properties</h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-sm-6 col-xs-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Flagged Properties Details
+                    </div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body ">
+                        <table  width="100%" id="dataTables-example"
+                                class="table table-striped table-bordered table-hover table-responsive css-serial">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Property Title</th>
+                                    <th>Reported By</th>
+                                    <th>User Email</th>
+                                    <th>User Contact Number</th>
+                                    <th>Issue Type</th>
+                                    <th>Message</th>
+                                    <th>Reported On</th>
+                                </tr>
+                            </thead>
+                            <tbody id="flagged_properties_result">
+                            </tbody>
+                        </table>
+                        <!-- /.table-responsive -->
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /#page-wrapper -->
+{% block footer_scripts %}
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script src="/static/js/auth.js?{% now 'U' %}"></script>
+    <script src="/static/js/apis/flags_apis.js?{% now 'U' %}"></script>
+    <script type="text/javascript">
+        $("document").ready(function(){
+
+            var flagged_properties_data = get_all_flagged_properties().responseJSON.results;
+            console.log(flagged_properties_data)
+            for(var i=0; i<flagged_properties_data.length; i++){
+                var template = '<tr>';
+                template += '<td>'+(i+1)+'</td>';
+
+                // Property Title
+                if(flagged_properties_data[i].property.property_title){
+                    template += '<td>'+flagged_properties_data[i].property.property_title+'</td>';
+                }
+                else{
+                    template += '<td>-</td>';
+                }
+
+                // Reported By
+                if(flagged_properties_data[i].flag_raised_by.first_name){
+                    template += '<td>'+flagged_properties_data[i].flag_raised_by.first_name+' '+flagged_properties_data[i].flag_raised_by.last_name+'</td>';
+                }
+                else{
+                    template += '<td>-</td>';
+                }
+
+                // User Email
+                template += '<td>'+flagged_properties_data[i].flag_raised_by.email+'</td>';
+
+                // User contact Number
+                if(flagged_properties_data[i].flag_raised_by.userprofile.mobile_number){
+                    template += '<td>'+flagged_properties_data[i].flag_raised_by.userprofile.mobile_number+'</td>';
+                }
+                else{
+                    template += '<td>-</td>';
+                }
+
+                // Issue Type
+                template += '<td>'+flagged_properties_data[i].type_of_flag.flag_type_name+'</td>';
+
+                // Message
+                if(flagged_properties_data[i].message){
+                    template += '<td>'+flagged_properties_data[i].message+'</td>';
+                }
+                else{
+                    template += '<td>-</td>';
+                }
+
+                // Reported On
+                template += '<td>'+flagged_properties_data[i].flag_raised_datetime+'</td>';
+
+                template += '</tr>';
+                $("#flagged_properties_result").append(template);
+            };
+            $('#dataTables-example').DataTable({
+                responsive: true
+            });
+        });
+    </script>
+{% endblock footer_scripts %}
+
+{% endblock content %}

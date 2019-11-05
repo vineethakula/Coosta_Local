@@ -1,0 +1,817 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    @media only screen and (min-width : 268px){
+        #property_container {
+            width: 100%;
+        }
+        #availability-modal-body{
+            padding:0px;
+        }
+        #skip_owner_availability{
+            margin-top:5px;
+            color:white;
+            width: 100%;
+        }
+        .timepicker{
+            padding-left: 15px;
+        }
+    }
+
+    @media only screen and (min-width : 768px){
+        #property_container {
+            width: 80%;
+         }
+        #availability-modal-body{
+            padding:50px 50px 0px 50px;
+        }
+        #skip_owner_availability{
+            margin-top:0px;
+            color:white;
+            width:100%;
+        }
+        .timepicker{
+            padding-left: 0px;
+        }
+    }
+
+    @media only screen and (min-width : 1200px){
+        #property_container {
+            width: 80%;
+         }
+        #availability-modal-body{
+            padding:50px 50px 0px 50px;
+        }
+        #skip_owner_availability{
+            margin-top:0px;
+            color:white;
+            width: 100%;
+        }
+        .timepicker{
+            padding-left: 0px;
+        }
+    }
+    #image_stack{
+        background-repeat: repeat-x;
+        height:106px;
+        margin-top: 13px;
+        overflow-y: auto;
+    }
+    #image_stack .existingTag{
+        width: 100px;
+        height: 106px;
+        line-height: 20px;
+        margin-top: 0px;
+        margin-left: 9px;
+        margin-right:0px;
+        display:inline-block;
+        position:relative;
+    }
+    #image_stack .existingTag a {
+        position: absolute;
+        right: 5px;
+        top: 5px;
+        color: white;
+        width: 10px;
+        height: 10px;
+        background-color: #3AD4A7;
+        border-radius: 5px;
+        text-align: center;
+        font-size: 7px;
+        line-height: 9px;
+    }
+    #image_stack .existingTag img {
+        padding: 5px;
+    }
+    .checkbox input {
+        width:1em;
+        height:1em;
+        cursor: pointer;
+    }
+    .checkbox label {
+        font-size: 1.5em;
+    }
+    #add_owner_availability{
+        color:white;
+        width: 100%;
+    }
+    .input-group-addon{
+        background-color: #3ad4a7;
+        border: 1 px solid #3ad4a7;
+    }
+    #timepicker1, #timepicker2, #timepicker3, #timepicker4{
+        border: 1px solid #3ad4a7 !important;
+    }
+    .glyphicon-time{
+        color: white;
+    }
+</style>
+<p></p>
+<br/>
+<br/>
+<p></p>
+<br/>
+<div id="property_container" class="mobile_container_fluid container-fluid">
+    <form action="" id="property_form" method="post">{% csrf_token %}
+        <div class="row">
+            <div class="col-xs-12">
+                <h3 class="text-center text-uppercase" style="color:#3AD4A7;"><b>list your Property</b></h3>
+                <br>
+                <div id="step1">
+                    <input type="hidden" id="coosta_user" value="{{user.username}}">
+                    <input type="hidden" id="user_id" value="{{user.id}}">
+                    <div class="row">
+                        <div class="col-md-6 col-xs-12 col-sm-10">
+                            <p style="color:black;"><b>STEP 1</b> : Add Your Address </p>
+                            <div class="form-group">
+                                <label for="address">Enter Address</label>
+                                <input type="text" class="form-control" id="address" name="address">
+                                <span id="address_error"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3 col-xs-12 col-sm-5">
+                            <div class="form-group">
+                                <label for="city">City</label>
+                                <input type="text" class="form-control" id="city" name="city">
+                                <span id="city_error"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-xs-12 col-sm-5">
+                            <div class="form-group">
+                                <label for="state">State</label>
+                                <select  class="form-control-01 three-sharp-edge-l empty" name="stateSelection" id="stateSelection" style="padding: 2px 12px;width:100%;    display: inline-block;    color: black;height: 33px;">
+                                    <!--<option value="0">State</option>-->
+                                    <option value="AK">AK</option>
+                                    <option value="AL">AL</option>
+                                    <option value="AR">AR</option>
+                                    <option value="AS">AS</option>
+                                    <option value="AZ">AZ</option>
+                                    <option value="CA" selected>CA</option>
+                                    <option value="CO">CO</option>
+                                    <option value="CT">CT</option>
+                                    <option value="DC">DC</option>
+                                    <option value="DE">DE</option>
+                                    <option value="FL">FL</option>
+                                    <option value="FM">FM</option>
+                                    <option value="GA">GA</option>
+                                    <option value="GU">GU</option>
+                                    <option value="HI">HI</option>
+                                    <option value="IA">IA</option>
+                                    <option value="ID">ID</option>
+                                    <option value="IL">IL</option>
+                                    <option value="IN">IN</option>
+                                    <option value="KS">KS</option>
+                                    <option value="KY">KY</option>
+                                    <option value="LA">LA</option>
+                                    <option value="MA">MA</option>
+                                    <option value="MD">MD</option>
+                                    <option value="ME">ME</option>
+                                    <option value="MH">MH</option>
+                                    <option value="MI">MI</option>
+                                    <option value="MN">MN</option>
+                                    <option value="MO">MO</option>
+                                    <option value="MP">MP</option>
+                                    <option value="MS">MS</option>
+                                    <option value="MT">MT</option>
+                                    <option value="NC">NC</option>
+                                    <option value="ND">ND</option>
+                                    <option value="NE">NE</option>
+                                    <option value="NH">NH</option>
+                                    <option value="NJ">NJ</option>
+                                    <option value="NM">NM</option>
+                                    <option value="NV">NV</option>
+                                    <option value="NY">NY</option>
+                                    <option value="OH">OH</option>
+                                    <option value="OK">OK</option>
+                                    <option value="OR">OR</option>
+                                    <option value="PA">PA</option>
+                                    <option value="PR">PR</option>
+                                    <option value="PW">PW</option>
+                                    <option value="RI">RI</option>
+                                    <option value="SC">SC</option>
+                                    <option value="SD">SD</option>
+                                    <option value="TN">TN</option>
+                                    <option value="TX">TX</option>
+                                    <option value="UT">UT</option>
+                                    <option value="VA">VA</option>
+                                    <option value="VI">VI</option>
+                                    <option value="VT">VT</option>
+                                    <option value="WA">WA</option>
+                                    <option value="WI">WI</option>
+                                    <option value="WV">WV</option>
+                                    <option value="WY">WY</option>
+                                </select>
+                                <span id="state_error"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="step2_button">
+                        <div class="col-md-3 col-xs-12 col-sm-3 btn-wrapper">
+                            <button type="button" class="btn button-1 gradient-bg three-sharp-edge-l"
+                                    onclick="return step1Validation()" style="color:white;">NEXT</button>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <hr/>
+                <div id="step2" style="display:none;">
+                    <div class="row">
+                        <div class="col-md-6 col-xs-12 col-sm-10">
+                            <p style="color:black;"><b>STEP 2</b> : Modify Property Details</p>
+                            <div class="form-group">
+                                <label for="property_title">Add Property Title <span class="fa fa-question-circle errspan"></span></label>
+                                <input type="text" class="form-control" id="property_title" name="property_title" value="">
+                                <span style="color:black;margin-top:-28px;margin-right:8px;" class="fa fa-pencil pull-right"></span>
+                                <span id="property_title_error"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-xs-12 col-sm-10">
+                            <div class="form-group">
+                                <label for="property_title">Address</label>
+                                <input type="text" class="form-control" id="address2" name="address2" value="">
+                                <span style="color:black;margin-top:-28px;margin-right:8px;" class="fa fa-pencil pull-right"></span>
+                                <span id="address2_error"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3 col-xs-12 col-sm-5">
+                            <div class="form-group">
+                                <label for="city">City</label>
+                                <input type="text" class="form-control" id="city1" name="city1" value="">
+                                <span style="color:black;margin-top:-28px;margin-right:8px;" class="fa fa-pencil pull-right"></span>
+                                <span id="city1_error"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-xs-12 col-sm-5">
+                            <div class="form-group">
+                                <label for="state">State</label>
+                                <input type="text" class="form-control" id="state1" name="state1" value="">
+                                <span style="color:black;margin-top:-28px;margin-right:8px;" class="fa fa-pencil pull-right"></span>
+                                <span id="state1_error"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3 col-xs-12 col-sm-5">
+                            <div class="form-group">
+                                <label for="zipcode">ZipCode</label>
+                                <input type="text" class="form-control" id="zipcode" name="zipcode" value="">
+                                <span style="color:black;margin-top:-28px;margin-right:8px;" class="fa fa-pencil pull-right"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-6 col-xs-12">
+                            <h5 style="color:#3AD4A7;"><b>PROPERTY DETAILS</b></h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3 col-xs-6">
+                            <div class="form-group">
+                                <label for="home_type">Home Type</label>
+                                <select style="height: 10%;" id="home_type" class="form-control">
+                                    <option value="Single family">Single family</option>
+                                    <option value="Condo">Condo</option>
+                                    <option value="Townhouse">Townhouse</option>
+                                    <option value="Multi family">Multi family</option>
+                                    <option value="Apartment">Apartment</option>
+                                    <option value="Mobile / Manufactured">Mobile / Manufactured</option>
+                                    <option value="Coop Unit">Coop Unit</option>
+                                    <option value="Vacant land">Vacant land</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-10" style="padding:0px;">
+                            <div class="col-md-3 col-xs-6 col-sm-3">
+                                <div class="form-group">
+                                    <label for="beds">Beds</label>
+                                    <input type="text" class="form-control" name="beds" id="beds" value="0">
+                                    <span style="color:black;margin-top:-28px;margin-right:8px;" class="fa fa-pencil pull-right"></span>
+                                    <span id="beds_error"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-xs-6 col-sm-3">
+                                <div class="form-group">
+                                    <label for="baths">Baths</label>
+                                    <input type="text" class="form-control" name="baths" id="baths" value="0">
+                                    <span style="color:black;margin-top:-28px;margin-right:8px;" class="fa fa-pencil pull-right"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-xs-6 col-sm-3">
+                                <div class="form-group">
+                                    <label for="rooms">Rooms</label>
+                                    <input type="text" class="form-control" name="rooms" id="rooms" value="0">
+                                    <span style="color:black;margin-top:-28px;margin-right:8px;" class="fa fa-pencil pull-right"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-xs-6 col-sm-3">
+                                <div class="form-group">
+                                    <label for="property_size">Floor Size (Sq Ft)</label>
+                                    <input type="text" class="form-control" name="property_size" id="property_size" value="0">
+                                    <span style="color:black;margin-top:-28px;margin-right:8px;" class="fa fa-pencil pull-right"></span>
+                                    <span id="property_size_error"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-10" style="padding:0px;">
+                            <div class="col-md-3 col-xs-6 col-sm-3">
+                                <div class="form-group">
+                                    <label for="floors">Floors</label>
+                                    <input type="text" class="form-control" name="floors" id="floors" value="0">
+                                    <span style="color:black;margin-top:-28px;margin-right:8px;" class="fa fa-pencil pull-right"></span>
+                                    <span id="floors_error"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-xs-6 col-sm-3">
+                                <div class="form-group">
+                                    <label for="basements">Basements</label>
+                                    <input type="text" class="form-control" name="basements" id="basements" value="0">
+                                    <span style="color:black;margin-top:-28px;margin-right:8px;" class="fa fa-pencil pull-right"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-xs-6 col-sm-3">
+                                <div class="form-group">
+                                    <label for="roof">Roof</label>
+                                    <input type="checkbox" class="form-control" name="roof" id="roof" style="width:25%;">
+                                    <span style="color:black;margin-top:-28px;margin-right:8px;" class="fa fa-pencil pull-right"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-xs-6 col-sm-3">
+                                <div class="form-group">
+                                    <label for="year_built">Year Built</label>
+                                    <input type="text" class="form-control" name="year_built" id="year_built" value="">
+                                    <span style="color:black;margin-top:-28px;margin-right:8px;" class="fa fa-pencil pull-right"></span>
+                                    <span id="year_built_error"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-xs-12 col-sm-10">
+                            <div class="form-group">
+                                <label for="description">Add Description</label>
+                                <textarea class="form-control" rows="3" name="description" id="description"></textarea>
+                                <span style="color:black;margin-top:-70px;margin-right:8px;" class="fa fa-pencil pull-right"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-xs-12 col-sm-10">
+                            <div class="form-group">
+                                <label for="features">Add Features</label>
+                                <textarea class="form-control" rows="3" name="features" id="features"></textarea>
+                                <span style="color:black;margin-top:-70px;margin-right:8px;" class="fa fa-pencil pull-right"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 style="color:#3AD4A7;"><b>ADD PHOTOS</b></h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 col-xs-12 col-sm-12" id="image_stack" style="">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div action="/api/images/" class="dropzone decoration" id="my-awesome-dropzone" method="POST" enctype="multipart/form-data" style="padding: 15px;min-height: 100%;max-height: 100%;border: none;">
+                            <div class="dz-message" data-dz-message style="margin: 0;top: 0px;height: 100%;">
+                                <div class="col-md-12" style="background-color: #ccc;padding: 0px;height: 100%;">
+                                    <p class="text-center text-uppercase" style="color: #333;padding-top: 16px;"><b>Drag & drop or</b>
+                                        <span style="color:red"><b style="color:#3AD4A7;">upload</b></span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <p></p>
+                    <br>
+                    <div class="row" id="step3_button">
+                        <div class="col-md-3 col-xs-12 col-sm-3 btn-wrapper">
+                            <button type="button" class="btn button-1 gradient-bg three-sharp-edge-l"
+                                    onclick="return step2Validation()" style="color:white;">NEXT</button>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div id="step3" style="display:none;">
+                    <div class="row">
+                        <div class="col-md-12 col-xs-12 col-sm-12">
+                            <p style="color:black;"><b>STEP 3</b> : Add Valuation Link</p>
+                            <p id="zestimate" style="color:black;"><b>Zestimate Price</b> : <span id="zestimate_price"></span></p>
+                            <div class="form-group">
+                                <label class="col-md-4 col-xs-4 col-sm-4" style="    margin-top: 5px;">Enter Price: &nbsp;</label>
+                                <input type="text" class="form-control col-md-4 col-xs-8 col-sm-12" id="property_price" name="property_price"
+                                       value="" placeholder="Enter Price" style="width:40%">
+                                <span id="property_price_error"></span>
+                            </div>
+                            <!--<div class="form-group">-->
+                                <!--<input type="text" class="form-control" id="valuation" name="valuation" value="">-->
+                            <!--</div>-->
+                            <!--<div class="form-group">-->
+                                <!--<input type="text" class="form-control" id="link1" name="link1" value="">-->
+                            <!--</div>-->
+                            <!--<div class="form-group">-->
+                                <!--<input type="text" class="form-control" id="link2" name="link2" value="">-->
+                            <!--</div>-->
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3 col-xs-12 col-sm-3 btn-wrapper">
+                            <button type="button" class="btn button-1 gradient-bg three-sharp-edge-l"
+                            onclick="return step3Validation()" style="color:white;">PUBLISH PROPERTY</button>
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- Open-House Modal Popup Start -->
+<div class="modal fade" id="openhousemodel" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header" hidden="true"></div>
+            <div id="modal-body" class="modal-body" align="left">
+                <div class="shadow-box-01" style="padding:20px;">
+                    <!--<button type="button" class="close" data-dismiss="modal">&times;</button>-->
+                    <h3><p>CREATE OPEN HOUSE</p></h3>
+                    <br>
+                    <form>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Select Date</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input id="openhousedate" type="date"  />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Select Timing</label>
+                            <hr />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>From</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input id="openhousetimefrom" type="time">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>To</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input id="openhousetimeto" type="time">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button type="button" class="btn button-1 gradient-bg three-sharp-edge-l" onclick="create_open_house()">
+                                    Create
+                                </button>
+                            </div>
+                            <div class="col-md-6">
+                                <button type="button" class="btn button-1 gradient-bg three-sharp-edge-l" onclick="skip_open_house()">
+                                    Skip
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <br>
+                    <br>
+                </div>
+            </div>
+            <div class="modal-footer" hidden="true"></div>
+        </div>
+    </div>
+</div>
+<!-- Open-House Modal Popup End -->
+<!-- Set Availability Modal Popup Start -->
+<div class="modal fade" id="setavailabilitymodal" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header" hidden="true"></div>
+            <div class="modal-body" id="availability-modal-body">
+                <div class="shadow-box-01" style="padding:20px;" id="checkboxfind">
+                    <span id="availability_set_error"></span>
+                    <h3>
+                        <p><b>SET DATE & TIME</b></p>
+                        <p>WEEKDAYS</p>
+                    </h3>
+                    <div class="form-group">
+                        <div class="row" >
+                            <div class="col-md-4 col-md-4 col-xs-6">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="" id="mon">&nbsp;Monday
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-md-4 col-xs-6">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="" id="tue">&nbsp;Tuesday
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-md-4 col-xs-6">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="" id="wed">&nbsp;Wednesday
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-md-4 col-xs-6">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="" id="thur">&nbsp;Thursday
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-md-4 col-xs-6">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="" id="fri">&nbsp;Friday
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-6 col-xs-12">
+                                <label>from</label>
+                                <div class="input-group bootstrap-timepicker timepicker">
+                                    <input id="timepicker1" type="text" class="form-control">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-xs-12">
+                                <label>to</label>
+                                <div class="input-group bootstrap-timepicker timepicker">
+                                    <input id="timepicker2" type="text" class="form-control">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-6 col-xs-12">
+                                <span id="time_error"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <h3>
+                        <p>WEEKENDS</p>
+                    </h3>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4 col-md-4 col-xs-6">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="" id="sat">&nbsp;Saturday
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-md-4 col-xs-6">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="" id="sun">&nbsp;Sunday
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-6 col-xs-12">
+                                <label>from</label>
+                                <div class="input-group bootstrap-timepicker timepicker">
+                                    <input id="timepicker3" type="text" class="form-control input-small">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-xs-12">
+                                <label>to</label>
+                                <div class="input-group bootstrap-timepicker timepicker">
+                                    <input id="timepicker4" type="text" class="form-control input-small">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-6 col-xs-12">
+                                <span id="wknd_time_error"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <button type="button" class="btn button-1 gradient-bg three-sharp-edge-l text-uppercase"
+                                        id="add_owner_availability" onclick="create_owner_availability()">Save Changes
+                                </button>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <button type="button" class="btn button-1 gradient-bg three-sharp-edge-l text-uppercase"
+                                        id="skip_owner_availability" onclick="skip_owner_availability()">Skip
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <br>
+                </div>
+            </div>
+            <div class="modal-footer" hidden="true"></div>
+        </div>
+    </div>
+</div>
+<!-- Open-House Modal Popup End -->
+{% block footer_scripts %}
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <!--<script src="/static/js/main.js"></script>-->
+    <!--<script src="/static/js/auth.js"></script>-->
+    <script src="/static/js/dropzone/dropzone.js"></script>
+    <link rel="stylesheet" href="/static/css/dropzone/dropzone.css">
+    <link rel="stylesheet" href="/static/css/dropzone/basic.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/css/bootstrap-timepicker.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js"></script>
+    <script>
+        $( document ).ready(function() {
+            $("#property_price").on("blur", function(){$("#property_price").val("$"+ parseInt($("#property_price").val().replace(/[$,]+/g,"")).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'))});
+            csrftoken = getCookie('csrftoken');
+            set_ajax_token();
+            Dropzone.options.myAwesomeDropzone = {
+                maxFilesize: 20, // Size in MB
+                acceptedFiles: ".png,.jpg,.jpeg",
+                addRemoveLinks: true,
+                removedfile: function(file) {
+                  var fileRef;
+                  return (fileRef = file.previewElement) != null ?
+                          fileRef.parentNode.removeChild(file.previewElement) : void 0;
+                },
+
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                success: function(file, response) {
+                    $(".dz-preview").remove();
+                    var new_image = post_property_images({"image": response['url'], "property": update_property_data['url']});
+                    var new_image_obj = get_properties_images_obj('/api/property_images/'+new_image['responseJSON']['id']+'/')['responseJSON']['image'];
+                    $("#image_stack").prepend('<div class="existingTag"><a href="#" onclick="delete_image('+new_image_obj['id']+')" class="closeButton">x</a><img id="'+new_image_obj['id']+'" style="height: 106px;width: 100px;" src="'+new_image_obj['image']+'" /></div>');
+                }
+
+            };
+        });
+
+        function delete_image(id){
+            var response = delete_properties_images_obj('/api/images/'+id+'/');
+            $("#"+id).parent().remove();
+        };
+
+        function skip_open_house(){
+            $('#setavailabilitymodal').modal('show');
+            $('#openhousemodel').modal('hide');
+        };
+
+        function create_open_house(){
+            if($("#openhousedate").val() != "" && $("#openhousetimefrom").val() != "" && $("#openhousetimeto").val() != ""){
+                var open_house_data = {};
+                open_house_data["property"] = "/api/property/"+update_property_data['id']+"/";
+                open_house_data["date"] = new Date($("#openhousedate").val());
+                open_house_data["start_time"] = new Date($("#openhousedate").val() + " " + $("#openhousetimefrom").val());
+                open_house_data["end_time"] = new Date($("#openhousedate").val() + " " + $("#openhousetimeto").val());
+                var response = post_openhouse_data(open_house_data);
+                if(response.statusText == "Created"){
+                    $('#setavailabilitymodal').modal('show');
+                    $('#openhousemodel').modal('hide');
+                }
+
+            }
+            else{
+                if($("#openhousedate").val() == ""){
+                    $("#openhousedate").css('border', '2px solid red')
+                }
+                if($("#openhousetimefrom").val() == ""){
+                    $("#openhousetimefrom").css('border', '2px solid red')
+                }
+                if($("#openhousetimeto").val() == ""){
+                    $("#openhousetimeto").css('border', '2px solid red')
+                }
+            }
+        };
+
+        // code for time-picker 24 hour format
+        $('#timepicker1').timepicker({
+            showMeridian: false
+        });
+        $('#timepicker2').timepicker({
+            showMeridian: false
+        });
+        $('#timepicker3').timepicker({
+            showMeridian: false
+        });
+        $('#timepicker4').timepicker({
+            showMeridian: false
+        });
+        // end of code for time-picker 24 hour format
+
+        // code for adding owner-availability
+        function create_owner_availability(){
+            var block1 = false;
+            var block2 = false;
+            if($("#mon").prop('checked') == false && $("#tue").prop('checked') == false && $("#wed").prop('checked') == false && $("#thur").prop('checked') == false && $("#fri").prop('checked') == false && $("#sat").prop('checked') == false && $("#sun").prop('checked') == false ){
+                $("#availability_set_error").html("<div class='validation' style='color:red;margin-bottom:10px;font-size:16px'><b>Please Set Your Availability</b></div>");
+            }
+            else{
+                $("#availability_set_error").html("");
+                if($("#mon").prop('checked') == true || $("#tue").prop('checked') == true || $("#wed").prop('checked') == true || $("#thur").prop('checked') == true || $("#fri").prop('checked') == true){
+                    if($("#timepicker1").val() == $("#timepicker2").val()){
+                        $("#time_error").html("<div class='validation' style='color:red;margin-bottom:10px;font-size:16px'><b>from time and to time can't be same</b></div>");
+                    }
+                    else if($("#timepicker2").val() < $("#timepicker1").val()){
+                        $("#time_error").html("<div class='validation' style='color:red;margin-bottom:10px;font-size:16px'><b>to time can't be less than from time</b></div>");
+                    }
+                    else{
+                        $("#time_error").html("");
+                        block1 = true;
+                    }
+                }
+                else{
+                    block1 = true;
+                }
+                if($("#sat").prop('checked') == true || $("#sun").prop('checked') == true){
+                    if($("#timepicker3").val() == $("#timepicker4").val()){
+                        $("#wknd_time_error").html("<div class='validation' style='color:red;margin-bottom:10px;font-size:16px'><b>from time and to time can't be same</b></div>");
+                    }
+                    else if($("#timepicker4").val() < $("#timepicker3").val()){
+                        $("#wknd_time_error").html("<div class='validation' style='color:red;margin-bottom:10px;font-size:16px'><b>to time can't be less than from time</b></div>");
+                    }
+                    else{
+                        $("#wknd_time_error").html("");
+                        block2 = true;
+                    }
+                }
+                else{
+                    block2 = true;
+                }
+
+                if(block1 == true && block2 == true){
+                    var set_owner_availability = {};
+                    set_owner_availability["property"] = "/api/property/"+update_property_data['id']+"/";
+                    set_owner_availability["monday"] = $("#mon").prop('checked');
+                    set_owner_availability["tuesday"] = $("#tue").prop('checked');
+                    set_owner_availability["wednesday"] = $("#wed").prop('checked');
+                    set_owner_availability["thursday"] = $("#thur").prop('checked');
+                    set_owner_availability["friday"] = $("#fri").prop('checked');
+                    set_owner_availability["saturday"] = $("#sat").prop('checked');
+                    set_owner_availability["sunday"] = $("#sun").prop('checked');
+
+                    if($("#mon").prop('checked') == true || $("#tue").prop('checked') == true || $("#wed").prop('checked') == true || $("#thur").prop('checked') == true || $("#fri").prop('checked') == true){
+                        set_owner_availability["wkd_start_time"] = $("#timepicker1").val();
+                        set_owner_availability["wkd_end_time"] = $("#timepicker2").val();
+                    }
+                    if($("#sat").prop('checked') == true || $("#sun").prop('checked') == true){
+                        set_owner_availability["wknd_start_time"] = $("#timepicker3").val();
+                        set_owner_availability["wknd_end_time"] = $("#timepicker4").val();
+                    }
+                    var post_availability = post_owner_availability_data(set_owner_availability)
+                    if(post_availability.statusText == "Created"){
+                        window.location.href = "/property/temp_preview/"+update_property_data['id']+"/";
+                    }
+                }
+            }
+        };
+        // end of code for adding owner-availability
+
+        // code if skipping owner-availability
+        function skip_owner_availability(){
+            window.location.href = "/property/temp_preview/"+update_property_data['id']+"/";
+        };
+        // end of code if skipping owner-availability
+    </script>
+    <!--<script src="/static/rest_framework/js/jquery-1.12.4.min.js"></script>-->
+    <!--<script src="/static/rest_framework/js/ajax-form.js"></script>-->
+    <!--<script src="/static/rest_framework/js/csrf.js"></script>-->
+    <!--&lt;!&ndash;<script src="/static/rest_framework/js/bootstrap.min.js"></script>&ndash;&gt;-->
+    <!--<script src="/static/rest_framework/js/prettify-min.js"></script>-->
+    <!--<script src="/static/rest_framework/js/default.js"></script>-->
+{% endblock footer_scripts %}
+
+{% endblock content %}

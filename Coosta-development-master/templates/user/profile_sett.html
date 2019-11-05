@@ -1,0 +1,261 @@
+{% extends "base.html" %}
+
+{% block content %}
+<p></p>
+<br/>
+<br/>
+<p></p>
+<br/>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <h5 style="color:#3AD4A7;">
+                <center><span style="font-size:21px;"><b>PROFILE SETTINGS</b></span></center>
+            </h5>
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <div class="row" style="height:150px;">
+                        {%  if user.userprofile.profile_image %}
+                            <div class="profile-section">
+                                <figure class="clearfix">
+                                    <div style="float: left;border-radius: 50%;width: 82px;height: 82px;
+                                    border: 5px solid #fff;box-shadow: 0px 0px 0px 1px #5ac389;
+                                    background-image:url('{{ request.user.userprofile.profile_image.url }}');
+                                    background-size: 80px 70px;background-repeat: no-repeat;">
+                                    </div>
+                                </figure><br/>
+                                <form style="cursor:pointer;margin-top:-21px;border:none;" action="." method="POST"
+                                  enctype="multipart/form-data" class="fileUpload btn btn-default text-center"
+                                  novalidate class="form-group" name="profile_image_form" id="profile_image_form"
+                                      title="Please click to change your Profile Image" >
+                                    <input style="height: 100%;width: 100%;" type="file" class="upload" name="profile_image"
+                                           id="profile_image">
+                                    <i class="fa fa-camera fa-2x" aria-hidden="true" style="cursor:pointer;"></i>
+                                    <span style="font-size:24px;">Change Photo</span>
+                                </form>
+                            </div>
+                        {% else %}
+                            <div class="profile-section">
+                                <figure class="clearfix">
+                                    <div style="float: left;border-radius: 50%;width: 82px;height: 82px;
+                                    border: 5px solid #fff;box-shadow: 0px 0px 0px 1px #5ac389;
+                                    background-image:url('/static/images/unisex_user_logo.png');
+                                    background-size: 80px 70px;background-repeat: no-repeat;">
+                                    </div>
+                                </figure><br/>
+                                <form style="cursor:pointer;margin-top:-21px;border:none;" action="." method="POST"
+                                  enctype="multipart/form-data" class="fileUpload btn btn-default text-center"
+                                  novalidate class="form-group" name="profile_image_form" id="profile_image_form"
+                                      title="Please click to change your Profile Image">
+                                    <input style="height: 100%;width: 100%;" type="file" class="upload" name="profile_image"
+                                           id="profile_image">
+                                    <i class="fa fa-camera fa-2x" aria-hidden="true" style="cursor:pointer;"></i>
+                                    <span style="font-size:24px;">Add Photo</span>
+                                </form>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-4"></div>
+            </div>
+            <br/>
+            <br/>
+            <div class="row" style="padding-left:20px;padding-right:20px;">
+                <div class="form-wrapper">
+                    <div class="form-group" name="profile_settings">
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6 col-md-6">
+                                <div class="form-group">
+                                    <label for="id_firstname">First Name</label>
+                                    <input class="form-control" autofocus="" id="id_firstname" max_length="30" name="firstname"
+                                        type="text">
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-md-6">
+                                <div class="form-group">
+                                    <label for="id_lastname">Last Name</label>
+                                    <input class="form-control" autofocus="" id="id_lastname" max_length="30" name="lastname"
+                                        type="text">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="id_areacode">Area Code</label>
+                                    <input class="form-control" autofocus="" id="id_areacode" max_length="30" name="areacode"
+                                        type="text">
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label for="id_number">Number</label>
+                                    <input class="form-control" autofocus="" id="id_number" max_length="30" name="phnumber"
+                                        type="text">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="id_youraddress">Your Address</label>
+                                    <input class="form-control" autofocus="" id="id_youraddress" max_length="30" name="youraddress"
+                                        type="text">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_city">City</label>
+                                    <input class="form-control" autofocus="" id="id_city" max_length="30" name="city"
+                                        type="text">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_state">State</label>
+                                    <input class="form-control" autofocus="" id="id_state" max_length="30" name="state"
+                                        type="text">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_zipcode">Zip Code</label>
+                                    <input class="form-control" autofocus="" id="id_zipcode" max_length="30" name="zipcode"
+                                        type="text">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_emailaddress">Email Address</label>
+                                    <input class="form-control" autofocus="" id="id_emailaddress" max_length="30" name="emailaddress" disabled="true"
+                                        type="text">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4"></div>
+                            <div class="col-md-4 btn-wrapper">
+                                <button type="button" class="btn button-1 gradient-bg three-sharp-edge-l"
+                                        style="color:white;" onclick="save_user_profile()">SAVE CHANGES
+                                </button>
+                            </div>
+                            <div class="col-md-4"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .fileUpload {
+        position: relative;
+        overflow: hidden;
+        margin: 10px;
+    }
+    .fileUpload input.upload {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 0;
+        padding: 0;
+        font-size: 20px;
+        cursor: pointer;
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+</style>
+{% block footer_scripts %}
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <!--<script src="/static/js/conf.js"></script>-->
+    <script src="/static/js/apis/user_profile_apis.js?{% now 'U' %}"></script>
+    <script src="/static/js/apis/user_apis.js?{% now 'U' %}"></script>
+    <script src="/static/js/dropzone/dropzone.js?{% now 'U' %}"></script>
+    <link rel="stylesheet" href="/static/css/dropzone/dropzone.css?{% now 'U' %}">
+    <link rel="stylesheet" href="/static/css/dropzone/basic.css?{% now 'U' %}">
+    <!--<script src="/static/js/main.js"></script>-->
+    <script type="text/javascript">
+        var profile_data = "";
+        $("document").ready(function(){
+            profile_image = [];
+            populate_user_profile_data("{{user.id}}");
+            $("#profile_image").on('change', function(e){
+                $("#profile_image_form").submit();
+            })
+        });
+
+        function populate_user_profile_data(user_id){
+            var csrftoken = getCookie('csrftoken');
+            var data = { "X-CSRFToken": csrftoken}
+            user_data = get_user_for_id(user_id, csrftoken);
+            profile_data = user_data.responseJSON["userprofile"];
+            user_profile_url = RemoveBaseUrl(profile_data['url']);
+            $('#id_firstname').val(user_data.responseJSON["first_name"]);
+            $('#id_lastname').val(user_data.responseJSON["last_name"]);
+            $('#id_areacode').val(profile_data["area_code"]);
+            $('#id_number').val(profile_data["mobile_number"]);
+            $('#id_youraddress').val(profile_data["address"]);
+            $('#id_city').val(profile_data["city"]);
+            $('#id_state').val(profile_data["state"]);
+            $('#id_zipcode').val(profile_data["zip_code"]);
+            $('#id_emailaddress').val(user_data.responseJSON["email"]);
+
+            set_ajax_token();
+            Dropzone.options.myAwesomeDropzone = {
+                maxFiles: 1, // Number of files to upload
+                init: function() {
+                    //this.on("processing", function(file) { // was processingfile
+                    this.on("maxfilesexceeded", function(file){
+                        alert("No more files please!");
+                      this.options.url = '/api/images/';
+                      this.options.method = 'POST';
+                    });
+                },
+                maxFilesize: 20, // Size in MB
+                acceptedFiles: ".png,.jpg",
+                addRemoveLinks: true,
+                removedfile: function(file) {
+                  var fileRef;
+                  return (fileRef = file.previewElement) != null ?
+                          fileRef.parentNode.removeChild(file.previewElement) : void 0;
+                },
+
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                success: function(file, response) {
+                              profile_image.push(response['url']);
+                            },
+                error: function(file, response){console.log(response)}
+
+            };
+        }
+
+        function save_user_profile(){
+            var user_data_to_update = {"username":"{{user.username}}", "first_name": $('#id_firstname').val(), "last_name": $('#id_lastname').val()};
+            var url = '/api/users/'+ "{{user.id}}" +'/';
+            update_user(url, user_data_to_update);
+
+            var user_profile_data = {};
+            user_profile_data["user"] = '/api/users/'+ "{{user.id}}" +'/';
+            user_profile_data["area_code"] = $('#id_areacode').val();
+            user_profile_data["mobile_number"] = $('#id_number').val();
+            user_profile_data["address"] = $('#id_youraddress').val();
+            user_profile_data["city"] = $('#id_city').val();
+            user_profile_data["state"] = $('#id_state').val();
+            user_profile_data["zip_code"] = $('#id_zipcode').val();
+            //if(profile_image.length >= 1){
+                //user_profile_data["profile_image"] = profile_image[0];
+            //}
+            //user_profile_data["email"] = $('#id_emailaddress').val();
+            update_user_profile(user_profile_url, user_profile_data);
+        }
+
+    </script>
+    {% endblock footer_scripts %}{% endblock content %}

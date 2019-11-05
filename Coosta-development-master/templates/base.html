@@ -1,0 +1,504 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <link rel="icon" href="/static/images/logo.ico">
+    <title>Coosta</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <!-- Place favicon.ico in the root directory -->
+    <link href="https://fonts.googleapis.com/css?family=Asap:400,700" rel="stylesheet">
+     <!--<link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">-->
+     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!--<link rel="stylesheet" href="static/css/normalize.css">-->
+    <link rel="stylesheet" href="/static/css/screen.css?{% now 'U' %}">
+    <link rel="stylesheet" href="/static/css/style-2.css?{% now 'U' %}">
+    <link rel="stylesheet" href="/static/css/form-style.css?{% now 'U' %}">
+    <link rel="stylesheet" href="/static/css/media_style.css?{% now 'U' %}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/on-off.css?{% now 'U' %}">
+    <link rel="stylesheet" href="/static/css/bootstrap-multiselect.css" type="text/css"/>
+    <!-- MetisMenu CSS -->
+    <link href="/static/dashboard-admin/css/metisMenu.min.css" rel="stylesheet">
+    <!-- DataTables CSS -->
+    <link href="/static/dashboard-admin/css/dataTables.bootstrap.css" rel="stylesheet">
+    <!-- DataTables Responsive CSS -->
+    <link href="/static/dashboard-admin/css/dataTables.responsive.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css" rel="stylesheet">
+    <style>
+        .navbar-toggle .icon-bar{
+            background-color: #3ad4a7;
+        }
+        header .navbar-toggle {
+            border-color: #3ad4a7;
+            width: 44px;
+            height: 33px;
+        }
+        header .navbar-toggle:hover {
+            background-color: #eee;
+        }
+        #fountainTextG{
+            width:234px;
+            margin:auto;
+        }
+
+        .fountainTextG{
+            color:rgb(0,0,0);
+            font-family:Arial;
+            font-size:24px;
+            text-decoration:none;
+            font-weight:normal;
+            font-style:normal;
+            float:left;
+            animation-name:bounce_fountainTextG;
+                -o-animation-name:bounce_fountainTextG;
+                -ms-animation-name:bounce_fountainTextG;
+                -webkit-animation-name:bounce_fountainTextG;
+                -moz-animation-name:bounce_fountainTextG;
+            animation-duration:2.09s;
+                -o-animation-duration:2.09s;
+                -ms-animation-duration:2.09s;
+                -webkit-animation-duration:2.09s;
+                -moz-animation-duration:2.09s;
+            animation-iteration-count:infinite;
+                -o-animation-iteration-count:infinite;
+                -ms-animation-iteration-count:infinite;
+                -webkit-animation-iteration-count:infinite;
+                -moz-animation-iteration-count:infinite;
+            animation-direction:normal;
+                -o-animation-direction:normal;
+                -ms-animation-direction:normal;
+                -webkit-animation-direction:normal;
+                -moz-animation-direction:normal;
+            transform:scale(.5);
+                -o-transform:scale(.5);
+                -ms-transform:scale(.5);
+                -webkit-transform:scale(.5);
+                -moz-transform:scale(.5);
+        }#fountainTextG_1{
+            animation-delay:0.75s;
+                -o-animation-delay:0.75s;
+                -ms-animation-delay:0.75s;
+                -webkit-animation-delay:0.75s;
+                -moz-animation-delay:0.75s;
+        }
+        #fountainTextG_2{
+            animation-delay:0.9s;
+                -o-animation-delay:0.9s;
+                -ms-animation-delay:0.9s;
+                -webkit-animation-delay:0.9s;
+                -moz-animation-delay:0.9s;
+        }
+        #fountainTextG_3{
+            animation-delay:1.05s;
+                -o-animation-delay:1.05s;
+                -ms-animation-delay:1.05s;
+                -webkit-animation-delay:1.05s;
+                -moz-animation-delay:1.05s;
+        }
+        #fountainTextG_4{
+            animation-delay:1.2s;
+                -o-animation-delay:1.2s;
+                -ms-animation-delay:1.2s;
+                -webkit-animation-delay:1.2s;
+                -moz-animation-delay:1.2s;
+        }
+        #fountainTextG_5{
+            animation-delay:1.35s;
+                -o-animation-delay:1.35s;
+                -ms-animation-delay:1.35s;
+                -webkit-animation-delay:1.35s;
+                -moz-animation-delay:1.35s;
+        }
+        #fountainTextG_6{
+            animation-delay:1.5s;
+                -o-animation-delay:1.5s;
+                -ms-animation-delay:1.5s;
+                -webkit-animation-delay:1.5s;
+                -moz-animation-delay:1.5s;
+        }
+        #fountainTextG_7{
+            animation-delay:1.64s;
+                -o-animation-delay:1.64s;
+                -ms-animation-delay:1.64s;
+                -webkit-animation-delay:1.64s;
+                -moz-animation-delay:1.64s;
+        }
+
+
+
+
+        @keyframes bounce_fountainTextG{
+            0%{
+                transform:scale(1);
+                color:rgb(0,0,0);
+            }
+
+            100%{
+                transform:scale(.5);
+                color:rgb(255,255,255);
+            }
+        }
+
+        @-o-keyframes bounce_fountainTextG{
+            0%{
+                -o-transform:scale(1);
+                color:rgb(0,0,0);
+            }
+
+            100%{
+                -o-transform:scale(.5);
+                color:rgb(255,255,255);
+            }
+        }
+
+        @-ms-keyframes bounce_fountainTextG{
+            0%{
+                -ms-transform:scale(1);
+                color:rgb(0,0,0);
+            }
+
+            100%{
+                -ms-transform:scale(.5);
+                color:rgb(255,255,255);
+            }
+        }
+
+        @-webkit-keyframes bounce_fountainTextG{
+            0%{
+                -webkit-transform:scale(1);
+                color:rgb(0,0,0);
+            }
+
+            100%{
+                -webkit-transform:scale(.5);
+                color:rgb(255,255,255);
+            }
+        }
+
+        @-moz-keyframes bounce_fountainTextG{
+            0%{
+                -moz-transform:scale(1);
+                color:rgb(0,0,0);
+            }
+
+            100%{
+                -moz-transform:scale(.5);
+                color:rgb(255,255,255);
+            }
+        }
+    </style>
+    <script src="/static/js/vendor/modernizr-2.8.3.min.js"></script>
+</head>
+
+<body>
+    <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+    <!-- Add your site or application content here -->
+    <header class="">
+        <nav class="navbar navbar-fixed-top navbar-bootsnipp animate" style="border-bottom:1px solid #f5f5f5;">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button aria-controls="bs-navbar" aria-expanded="false" class="collapsed navbar-toggle" data-target="#bs-navbar" data-toggle="collapse" type="button">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/"><img class="main-logo" src="/static/images/img/main-logo.png" alt="COOSTA"></a>
+                    {% if user.is_authenticated %}
+                        <ul>
+                            <li id="image-mobile-view">
+                                <a href="/dashboard/">
+                                    {%  if user.userprofile.profile_image %}
+                                        <img style=" width:25px;height:25px; border-radius:50%;border:solid 2px #3ad4a7;" src="{{ request.user.userprofile.profile_image.url }}" />
+                                    {% else %}
+                                        <img style="width:25px;height:25px; border-radius:50%;border:solid 2px #3ad4a7;"
+                                             class="img-circle" src="/static/images/unisex_user_logo.png" alt="">
+                                    {% endif %}
+                                </a>
+                            </li>
+                        </ul>
+                    {% endif %}
+                </div>
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="bs-navbar">
+                    {% if user.is_authenticated %}
+                        <ul class="nav navbar-nav navbar-right fixed">
+                            <li class="left-right">
+                                <a href="#"><i  style="color:#3ad4a7;" class="fa fa-calendar fa-lg"></i></a>
+                            </li>
+                            <li class="right-border">
+                                <a href="#" data-toggle="dropdown">
+                                    <i style="color:#3ad4a7;" class="fa fa-commenting-o fa-lg"></i>
+                                </a>
+                                <ul class="dropdown-menu messages" role="menu" style="padding:0px;">
+                                    <li id="message_pane" style="width: 100%;overflow: auto; max-height: 240px;"></li>
+                                </ul>
+                            </li>
+                            <li class="right-border">
+                                <a href="#" data-toggle="dropdown">
+                                    <i style="color:#3ad4a7;" class="fa fa-bell-o fa-lg"></i>
+                                </a>
+                                <ul class="dropdown-menu notification" role="menu" style="padding:0px;">
+                                    <li id="my_notifications" style="width: 100%;overflow: auto; max-height: 240px;">
+                                    </li>
+                                </ul>
+                            </li>
+                            <li id="image-desktop-view">
+                                <a href="/dashboard/">
+                                    {%  if user.userprofile.profile_image %}
+                                        <img style=" width:35px;height:35px; border-radius:50%;border:solid 2px #3ad4a7;" src="{{ request.user.userprofile.profile_image.url }}" />
+                                    {% else %}
+                                        <img style="width:35px;height:35px; border-radius:50%;border:solid 2px #3ad4a7;" class="img-circle" src="/static/images/unisex_user_logo.png" alt="">
+                                    {% endif %}
+                                </a>
+                            </li>
+                            <li class="left-border">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    &nbsp;<span style="color:#3ad4a7;">Hey  {{ user.username }} &nbsp;</span>
+                                </a>
+                                <ul class="dropdown-menu account" role="menu">
+                                    <li><a href="/"> Search Properties &nbsp;<i class="fa fa-angle-right"></i> </a></li>
+                                    <li><a href="{% url 'statistics_home' %}"> Statistics</a></li>
+                                    <li><a href="{% url 'my_shortlisted_property' %}"> Favourite Properties</a></li>
+                                    <li><a href="{% url 'my_property' %}"> My Properties </a></li>
+                                    <li><a href="{% url 'offers' %}"> Offers </a></li>
+                                    <hr />
+                                    <li><a href="{% url 'profile_settings' %}"> Profile Settings</a></li>
+                                    <li><a href="{% url 'account_settings' %}"> Account settings </a></li>
+                                    <li><a href="/user/logout/?next=/"> Logout </a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    {% else %}
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><a href="/user/login/?next=/" style="color:#63d9ba;">LOGIN</a></li>
+                            <li><a href="/account/register/" style="color:#63d9ba;">SIGNUP</a></li>
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+    </header>
+    <!--header-->
+    <!--TODO set the min-height to fit in all screen-->
+    <div id="main_content">
+        <div id="load_content" style="position: absolute;top: 100px;left: 45%;z-index: 999999;">
+            <br />
+            <br />
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div id="fountainTextG"><div id="fountainTextG_1" class="fountainTextG">L</div><div id="fountainTextG_2" class="fountainTextG">o</div><div id="fountainTextG_3" class="fountainTextG">a</div><div id="fountainTextG_4" class="fountainTextG">d</div><div id="fountainTextG_5" class="fountainTextG">i</div><div id="fountainTextG_6" class="fountainTextG">n</div><div id="fountainTextG_7" class="fountainTextG">g</div></div>
+            </div>
+        </div>
+        {% block content %}{% endblock content %}
+    </div>
+
+
+    <footer>
+        <div class="container-fluid">
+            <div class="footer-top">
+                <div class=""><img src="/static/images/img/main-logo.png" alt="COOSTA"></div>
+                <ul class="social-connect">
+                    <li><a href="#"><img src="/static/images/img/ic-facebook.png" alt="Facebook"></a></li>
+                    <li><a href="#"><img src="/static/images/img/ic-gplus.png" alt="Google+"></a></li>
+                    <li><a href="#"><img src="/static/images/img/ic-twitter.png" alt="Twitter"></a></li>
+                    <li><a href="#"><img src="/static/images/img/ic-lnkedin.png" alt="Linkedin"></a></li>
+                </ul>
+                <ul class="footer-menus">
+                    <li><a href="{% url 'about_us' %}">About Us</a></li>
+                    <li><a href="{% url 'how_it_works' %}">How It Works</a></li>
+                    <li><a href="{% url 'help-faq' %}">Help &amp; FAQ</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-xs-12 cc-grey">2016 Copyrights Reserved.</div>
+                <ul class="col-md-6 pull-right lower-menu col-xs-12">
+                    <li><a href="{% url 'terms_conditions' %}" class="cc-grey">Terms Of Use</a></li>
+                    <li><a href="{% url 'privacy_policy'%}" class="cc-grey">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+
+    </footer>
+    <!--footer-->
+
+    <script src="/static/js/jquery-1.12.0.min.js"></script>
+    <script>
+        var h = window.innerHeight - ($('nav').height()+$('footer').height())+39;
+        $("#main_content").css('min-height', h+'px');
+    </script>
+    <script src="/static/js/jquery.validate.min.js"></script>
+    <script src="/static/js/additional-methods.js"></script>
+    <script src="/static/js/jquery.noty.packaged.min.js"></script>
+
+    <script src="/static/js/form-validation.js?{% now 'U' %}"></script>
+    <script src="/static/js/plugins.js?{% now 'U' %}"></script>
+
+    <script src="/static/js/main.js?{% now 'U' %}"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/auth.js?{% now 'U' %}"></script>
+    <script src="/static/js/apis/user_apis.js?{% now 'U' %}"></script>
+    <script src="/static/js/apis/property_apis.js?{% now 'U' %}"></script>
+    <script src="/static/js/apis/message_api.js?{% now 'U' %}"></script>
+    <script src="/static/js/conf.js?{% now 'U' %}"></script>
+    <script src="/static/js/apis/email.js?{% now 'U' %}"></script>
+    <script src="/static/js/apis/user_notification.js?{% now 'U' %}"></script>
+    <script src="/static/js/apis/property_statistic.js?{% now 'U' %}"></script>
+    <script src="/static/js/apis/offer_management_api.js?{% now 'U' %}"></script>
+    <script src="/static/js/apis/contract_api.js?{% now 'U' %}"></script>
+    <script src="/static/js/apis/escrow_api.js?{% now 'U' %}"></script>
+    <script src="/static/js/apis/appointment_apis.js?{% now 'U' %}"></script>
+    <script type="text/javascript" src="/static/js/bootstrap-multiselect.js"></script>
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="/static/dashboard-admin/js/metisMenu.min.js"></script>
+    <!-- DataTables JavaScript -->
+    <script src="/static/dashboard-admin/js/jquery.dataTables.min.js"></script>
+    <script src="/static/dashboard-admin/js/dataTables.bootstrap.min.js"></script>
+    <script src="/static/dashboard-admin/js/dataTables.responsive.js"></script>
+
+
+    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+    <!--<script>-->
+        <!--(function(b, o, i, l, e, r) {-->
+            <!--b.GoogleAnalyticsObject = l;-->
+            <!--b[l] || (b[l] =-->
+                <!--function() {-->
+                    <!--(b[l].q = b[l].q || []).push(arguments)-->
+                <!--});-->
+            <!--b[l].l = +new Date;-->
+            <!--e = o.createElement(i);-->
+            <!--r = o.getElementsByTagName(i)[0];-->
+            <!--e.src = 'https://www.google-analytics.com/analytics.js';-->
+            <!--r.parentNode.insertBefore(e, r)-->
+        <!--}(window, document, 'script', 'ga'));-->
+        <!--ga('create', 'UA-XXXXX-X', 'auto');-->
+        <!--ga('send', 'pageview');-->
+
+        <!--// $('#iconified').on('keyup', function() {-->
+        <!--//     var input = $(this);-->
+        <!--//     if(input.val().length === 0) {-->
+        <!--//         input.addClass('empty');-->
+        <!--//     } else {-->
+        <!--//         input.removeClass('empty');-->
+        <!--//     }-->
+        <!--// });-->
+
+    <!--</script>-->
+
+    <script>
+        {% if user.is_authenticated %}
+            $( document ).ready(function() {
+                render_message_tab();
+            });
+
+            function render_message_tab(){
+                var url1 = message_base_url + '?recipient={{ user.id }}';
+                var message_data1 = get_my_message(url1).responseJSON;
+                var url1 = message_base_url + '?sender={{ user.id }}';
+                var message_data2 = get_my_message(url1).responseJSON;
+                var message_data = message_data1.results.concat(message_data2.results);
+                for(var i=0; i<message_data.length; i++){
+                    if(message_data[i]['sender'] != null){
+                        if(message_data[i]['sender']['userprofile']['profile_image']){
+                            var sender_image = message_data[i]['sender']['userprofile']['profile_image'];
+                        }
+                        else{
+                            var sender_image = "/static/images/unisex_user_logo.png";
+                        }
+                        var sender_name = message_data[i]['sender']['username'];
+                        var sender_id = 'message_dd_'+message_data[i]['sender']['id'];
+                        var template = '<a id="'+sender_id+'" href="/message/message_box/'+message_data[i].sender.id+'/" style="height: 60px;border-bottom: 1px solid #eceeef;"></a>';
+                        if($("#"+sender_id).length==0){
+                            $("#message_pane").prepend(template);
+                        }
+                    }
+                    else{
+                        var sender_image = "/static/images/unisex_user_logo.png";
+                        var sender_name = 'Anonymous';
+                        var sender_id = 'message_dd_anonymous_'+message_data[i].id;
+                        var template = '<a id="'+sender_id+'" href="/message/message_box/" style="height: 60px;border-bottom: 1px solid #eceeef;"></a>';
+                        $("#message_pane").prepend(template);
+                    }
+                    var template = '<div><div class="pull-left" style="height: 55px;width: 20%;"><img style="height:55px; width:55px; border-radius:50%; border:solid 2px #3ad4a7; padding:1px;" class="img-circle" src="'+sender_image+'" alt=""></div>';
+                    template += '<div class="pull-right" style="width: 80%;"><span><strong>'+sender_name+'</strong><br />'+message_data[i].message_body.slice(0, 20)+'...</span></div></div>';
+                    $("#"+sender_id).html(template);
+                };
+                var template = '<li><a href="/message/message_box/" style="height: 20px;border-bottom: 1px solid #eceeef;line-height: 15px;font-size: 15px;text-align: center;color: grey;background-color: #ece9e9;">';
+                if(message_data.length == 0){
+                    template += '<div>0 Message</div>';
+                }
+                else{
+                    template += '<div>View All</div>';
+                }
+                template += '</a></li>';
+                $("#message_pane").parent().append(template);
+            }
+        {% endif %}
+
+        //notification_return
+        {% if user.is_authenticated %}
+            $( document ).ready(function() {
+                var csrftoken = getCookie('csrftoken');
+                var token = { "X-CSRFToken": csrftoken}
+                //var user_data = get_user_for_id('1', token).responseJSON;
+                search_query1 = '{{ user.id }}';
+                var filter2 = 'property_owner=' + encodeURIComponent(search_query1);
+                render_notification_tab(filter2);
+            });
+
+            function render_notification_tab(filter){
+                var url = user_notification_base_url + '?' + filter;
+                notification_data = get_my_notification(url).responseJSON;
+                for(var i=0; i<notification_data.count; i++){
+                    if(notification_data.results[i]['shortlisted_by']['userprofile']['profile_image']){
+                        var shortlisted_user_image = notification_data.results[i]['shortlisted_by']['userprofile']['profile_image'];
+                    }
+                    else{
+                        var shortlisted_user_image = "/static/images/unisex_user_logo.png";
+                    }
+                    var shortlisted_user_name = notification_data.results[i]['shortlisted_by']['username'];
+                    if(notification_data.results[i]['property']){
+                        var shortlisted_property_id = notification_data.results[i]['property']['id'];
+                    }
+                    var template = '<a href="/property/preview/'+shortlisted_property_id+'" style="height: 60px;border-bottom: 1px solid #eceeef;">';
+                    template += '<div><div class="pull-left" style="height: 55px;width: 20%;"><img style="height:55px; width:55px; border-radius:50%; border:solid 2px #3ad4a7; padding:1px;" class="img-circle" src='+shortlisted_user_image+' alt=""></div>';
+                    template += '<div class="pull-right" style="width: 80%;"><span><strong>'+shortlisted_user_name+'</strong><br />'+notification_data.results[i].body.slice(0, 20)+'...</span></div></div>';
+                    template += '</a>';
+                    $("#my_notifications").append(template);
+                };
+                var template = '<li><a href="/notification/" style="height: 20px;border-bottom: 1px solid #eceeef;line-height: 15px;font-size: 15px;text-align: center;color: grey;background-color: #ece9e9;">';
+                if(notification_data.count == 0){
+                    template += '<div>0 Notification</div>';
+                }
+                else{
+                    template += '<div>View All</div>';
+                }
+                template += '</a></li>';
+                $("#my_notifications").parent().append(template);
+            }
+        {% endif %}
+    function drop_ad(data) {
+        if (data.ads[0].description && data.ads[0].statlink) {
+            $('.bsa-apiads').html('<a href="'+data.ads[0].statlink+'" target="_blank">'+data.ads[0].description+'</a>');
+            if (data.ads[0].pixel) {
+                $('.bsa-apiads').append('<img height=1 width=1 src="'+data.ads[0].pixel+'"/>');
+            }
+        }
+    }
+
+    $("document").ready(function(){
+        $("#load_content").hide();
+    });
+    </script>
+</body>
+
+</html>

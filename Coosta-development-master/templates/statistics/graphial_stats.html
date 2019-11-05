@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    . stats_legend {
+        border: 1px solid grey;
+        border-radius: 5px;
+    }
+    .btn .caret {
+        margin-left: 0;
+        display: none;
+    }
+    .multiselect-container li > a {
+        background-color: white !important;
+        color: #860c86 !important;
+    }
+</style>
+<br />
+<br />
+<br />
+<div class="container-fluid">
+    <div class="row" style="width:100%;">
+        <div class="col-md-12">
+            <h1 class="text-uppercase text-center" style="color:#3ad4a7;"><b>Statistics</b></h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="shadow-box-01 spa-container-panel">
+                <div class="row">
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        Property
+                        <select id="example-getting-started" multiple="multiple" style="display:none;">
+                            {% for property in user_properties %}
+                            <option value="{{property.id}}" selected="selected" disabled>{{property.address}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-8 col-sm-12 col-xs-12">
+                        <i class="stats_legend" style="background-color:#3ad4a7">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i> Property Views
+                        <i class="stats_legend" style="background-color:black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i> Shortlists
+                        <i class="stats_legend" style="background-color:#045f44">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i> Offers
+                        <i class="stats_legend" style="background-color:#cbd0ce">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i> Appointments
+                        <canvas id="statistic_chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.3.0/js/mdb.min.js'></script>
+<script>
+    $(document).ready(function() {
+        $('#example-getting-started').multiselect({
+            onChange: function(option, checked, select) {
+                //alert('Changed option ' + $(option).val() + '.');
+            }
+        });
+        $('#example-getting-started').show();
+        stats = JSON.parse('{{stats}}'.replace(/&quot;/g, '"'));
+        var data = {
+            //labels: ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5"],
+            labels: ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5"],
+            datasets: [
+                {
+                    label: "Property Views",
+                    fillColor: "#3ad4a7",
+                    strokeColor: "rgba(220,220,220,0.8)",
+                    highlightFill: "rgba(220,220,220,0.75)",
+                    highlightStroke: "rgba(220,220,220,1)",
+                    data: stats.views
+                },
+                {
+                    label: "Shortlists",
+                    fillColor: "black",
+                    strokeColor: "rgba(220,220,220,0.8)",
+                    highlightFill: "rgba(220,220,220,0.75)",
+                    highlightStroke: "rgba(220,220,220,1)",
+                    data: stats.shortlists
+                },
+                {
+                    label: "Offers",
+                    fillColor: "#045f44",
+                    strokeColor: "rgba(220,220,220,0.8)",
+                    highlightFill: "rgba(220,220,220,0.75)",
+                    highlightStroke: "rgba(220,220,220,1)",
+                    data: stats.offers
+                },
+                {
+                    label: "Appointments",
+                    fillColor: "#cbd0ce",
+                    strokeColor: "rgba(220,220,220,0.8)",
+                    highlightFill: "rgba(220,220,220,0.75)",
+                    highlightStroke: "rgba(220,220,220,1)",
+                    data: stats.appointments
+                }
+            ]
+        };
+
+        var option = {
+        responsive: true,
+        };
+
+        // Get the context of the canvas element we want to select
+        var ctx = document.getElementById("statistic_chart").getContext('2d');
+        var myLineChart = new Chart(ctx).Bar(data, option); //'Line' defines type of the chart.
+    });
+
+</script>
+{% endblock content %}

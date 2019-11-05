@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block content %}
+<p></p>
+<br/>
+<br/>
+<p></p>
+<br/>
+    <section id="register" class="features-wrapper" style="padding:0px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <div class="form-wrapper">
+                        <h5 style="color:#3AD4A7;">
+                            <a href="/"><i class="fa fa-chevron-left" aria-hidden="true" style="color:#3AD4A7;"></i></a>
+                            &nbsp;&nbsp;&nbsp;Account Benefits
+                        </h5>
+                        <ul style="font-size: 12px;">
+                            <li style="margin-left: 30px;"> Short Unlimited Properties</li>
+                            <li style="margin-left: 30px;">Talk or Chat with the property seller or buyer.</li>
+                        </ul>
+                        <hr>
+                        <form class="form-group" method="post" action="." name="registration">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="id_username">Username:</label>
+                                <input class="form-control" autofocus="" id="id_username" max_length="30" name="username"
+                                       type="text" required="" aria-required="true">
+                                {% if form.username.errors %}
+                                    {% for error in form.username.errors %}
+                                        {% if error == 'This field is required.' %}
+                                            <p style="color:red !important; display:none;"><strong>{{error}}</strong></p>
+                                        {% else %}
+                                            <p id="user_exist_error" style="color:red !important;"><strong>Username already taken</strong></p>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                <label for="id_email">Email address:</label>
+                                <input class="form-control" autofocus="" id="id_email" max_length="30" name="email"
+                                       type="email" required="" aria-required="true">
+                                {% if form.email.errors %}
+                                    {% for error1 in form.email.errors %}
+                                        {% if error1 == 'This field is required.' %}
+                                            <p style="color:red !important; display:none;"><strong>{{error1}}</strong></p>
+                                        {% else %}
+                                            <p id="email_exist_error" style="color:red !important;"><strong>{{error1}}</strong></p>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                <label for="id_password1">Password:</label>
+                                <input class="form-control" autofocus="" id="id_password1" max_length="30" name="password1"
+                                       type="password" required="" aria-required="true">
+                            </div>
+                            <div class="form-group">
+                                <label for="id_password2">Password (again):</label>
+                                <input class="form-control" autofocus="" id="id_password2" max_length="30" name="password2"
+                                       type="password" required="" aria-required="true">
+                            </div>
+                            <div class="form-group">
+                                <label for="id_show_password">Show Password:</label>
+                                <input class="form-control" autofocus="" id="id_show_password" name="show_password" type="checkbox"
+                                       style="width:20px; height:20px;" onchange="showPassword()">
+                            </div>
+                            <div class="btn-wrapper">
+                                <button type="submit" onclick="remove_user_exist_error()" class="btn button-1 gradient-bg three-sharp-edge-l ">SIGN UP</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-md-4"></div>
+            </div>
+        </div>
+    </section>
+
+{% block footer_scripts %}
+<script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+<script type="text/javascript">
+    function showPassword(){
+        var pwd1 = document.getElementById("id_password1");
+        var pwd2 = document.getElementById("id_password2");
+        if (pwd1.type == "password"){
+            pwd1.type = "text"
+        }
+        else{
+            pwd1.type = "password"
+        }
+        if (pwd2.type == "password"){
+            pwd2.type = "text"
+        }
+        else{
+            pwd2.type = "password"
+        }
+    }
+
+    $("document").ready(function(){
+        try{
+            $("#id_username").val(localStorage.getItem('name').replace("\"", "").replace("\"", ""));
+            $("#id_email").val(localStorage.getItem('email').replace("\"", "").replace("\"", ""));
+            $("#id_password1").val(localStorage.getItem('password').replace("\"", "").replace("\"", ""));
+            $("#id_password2").focus();
+            localStorage.removeItem('name');
+            localStorage.removeItem('email');
+            localStorage.removeItem('password');
+        }
+        catch(err){
+            console.log(err);
+        }
+    });
+
+
+</script>
+{% endblock footer_scripts %}
+{% endblock content %}

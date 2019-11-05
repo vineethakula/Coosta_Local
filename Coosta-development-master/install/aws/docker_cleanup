@@ -1,0 +1,15 @@
+#!/bin/bash
+echo ""
+echo "***** Coosta Docker clean up script *****"
+date
+
+echo "Runnig --> docker network create coosta_aws_net"
+docker network create coosta_aws_net
+
+echo "Running --> docker kill (docker ps -q)"
+docker kill $(docker ps -q)
+
+echo "Running --> docker rm (docker ps -a -q)"
+docker rm $(docker ps -a -q)
+
+exit 0

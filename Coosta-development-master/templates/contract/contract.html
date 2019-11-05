@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="spa-heading">
+    <h1 class="text-uppercase spa-heading-title"><b>Contract</b></h1>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 spa-container">
+            <div class="shadow-box-01 spa-container-panel">
+                <p class="spa-container-content">
+                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+                    industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type
+                    and scrambled it to make a type specimen book. It has survived not only five centuries, but also the
+                    leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s
+                    with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop
+                    publishing software like Aldus PageMaker including versions of Lorem Ipsum
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+            <div class="col-md-4"></div>
+            <div class="col-md-4" id="contract_result">
+
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+    </div>
+</div>
+<br>
+{% block footer_scripts %}
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script type="text/javascript">
+        $("document").ready(function(){
+            var csrftoken = getCookie('csrftoken');
+            var data = { "X-CSRFToken": csrftoken}
+            //Getting Contract Detail
+            var url = "/api/contract/{{contract_id}}/";
+            contract_data_object = get_contract(data, url).responseJSON;
+            // Getting Escrow Details
+            var url2 = "/api/escrowproperty/?contract__id={{contract_id}}";
+            var escrow_property_object = get_escrow_property(data, url2).responseJSON;
+            var template = '<div>';
+            if(contract_data_object.signed_by_buyer && contract_data_object.signed_by_seller){
+                if(escrow_property_object.count>0){
+                    template += '<p>You both have signed the contract and sent it to escrow.</p>';
+                    template += '<a href="/escrows/closing-agent/'+escrow_property_object.results[0].id+'/" id="sign-contract-btn" type="button" class="btn button-1 gradient-bg three-sharp-edge-l" style="color:white;"><b>View Escrow</b></a>';
+                }
+            }
+            else if(contract_data_object.buyer.id == {{ user.id }}){
+                if(contract_data_object.signed_by_buyer){
+                    template += '<p>You have signed the contract and waiting for seller to sign it.</p>';
+                    template += '<a href="" id="sign-contract-btn" type="button" class="btn button-1 gradient-bg three-sharp-edge-l disabled" style="color:white;"><b>View Escrow</b></a>';
+                }
+                else{
+                    template += '<button id="sign-contract-btn" class="btn button-1 gradient-bg three-sharp-edge-l" style="color:white;" type="button" onclick="sendToEscrow()"><b>SIGN</b></button>';
+                }
+            }
+            else if(contract_data_object.seller.id == {{ user.id }}){
+                if(contract_data_object.signed_by_seller){
+                    template += '<p>You have signed the contract and waiting for buyer to sign it.</p>';
+                    template += '<a href="" id="sign-contract-btn" type="button" class="btn button-1 gradient-bg three-sharp-edge-l disabled" style="color:white;"><b>View Escrow</b></a>';
+                }
+                else{
+                    template += '<button id="sign-contract-btn" class="btn button-1 gradient-bg three-sharp-edge-l" style="color:white;" type="button" onclick="sendToEscrow()"><b>SIGN</b></button>';
+                }
+            }
+            else{
+                template += '<button id="sign-contract-btn" class="btn button-1 gradient-bg three-sharp-edge-l" style="color:white;" type="button" onclick="sendToEscrow()"><b>SIGN</b></button>';
+            }
+            template += '</div>';
+            $("#contract_result").append(template);
+        });
+
+        //Function to update Contract Detail
+        function sendToEscrow(){
+            var url = "/api/contract/{{contract_id}}/";
+            var date = new Date();
+            var utcDate = date.toJSON();
+            var contract_update = {};
+            if({{user.id}} == contract_data_object.buyer.id){
+                contract_update["signed_by_buyer"] = true;
+                contract_update["signed_by_buyer_on"] = utcDate;
+            }
+            else if({{user.id}} == contract_data_object.seller.id){
+                contract_update["signed_by_seller"] = true;
+                contract_update["signed_by_seller_on"] = utcDate;
+            }
+            var updating_contract = update_contract(contract_update, url);
+            if(updating_contract.status ==200){
+                location.reload();
+            }
+        }
+    </script>
+{% endblock footer_scripts %}
+{% endblock content %}

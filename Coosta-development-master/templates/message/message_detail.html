@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+        @media only screen and (min-width : 268px){
+            #property_container {
+                width: 100%;
+             }
+        }
+
+        @media only screen and (min-width : 768px){
+            #property_container {
+                width: 80%;
+             }
+        }
+
+        @media only screen and (min-width : 1200px){
+            #property_container {
+                width: 80%;
+             }
+        }
+    </style>
+<p></p>
+<br/>
+<br/>
+<p></p>
+<br/>
+{% if user.is_authenticated %}
+<script src="https://use.fontawesome.com/45e03a14ce.js"></script>
+<div class="main_section">
+   <div class="container-fluid" id="property_container">
+      <div class="chat_container">
+         <div class="col-sm-12 message_section">
+             <div class="row">
+                 <div class="image-show">
+                     <span class="chat-img pull-left">
+                         <span>
+                            <a href="/message/message_box/"><i class="fa fa-chevron-left" aria-hidden="true" style="color:#3AD4A7;"></i></a>&nbsp;
+                         </span>
+                         {% if sender.userprofile.profile_image %}
+                         <img style="border:solid 2px #3ad4a7;padding: 1px;" class="img-circle" src="{{ sender.userprofile.profile_image.url }}" alt="">
+                         {% else %}
+                         <img style="border:solid 2px #3ad4a7;padding: 1px;" class="img-circle" src="/static/images/unisex_user_logo.png" alt="">
+                         {% endif %}
+                     </span>
+                     <div class="chat-body clearfix">
+                         <div class="header_sec">
+                             {% if sender.firstname %}
+                                <strong class="primary-font">{{sender.firstname}} {{ m_user.sender.lastname }}</strong>
+                                <strong class="pull-right"></strong>
+                             {% else %}
+                                <strong class="primary-font">{{sender|default_if_none:"Anonymous"}}</strong>
+                                <strong class="pull-right"></strong>
+                             {% endif %}
+                         </div>
+                     </div>
+                 </div>
+                 <div class="chat_area">
+                     <ul id="chat_area_block" class="list-unstyled">
+                         {% for message in message_conversation %}
+                            {% if message.sender.username == user.username %}
+                                <li class="left clearfix admin_chat  {{message.recipient.username}}_plus_{{message.sender.username}} {{message.sender.username}}_plus_{{message.recipient.username}}">
+                                    <div class="chat-body1 clearfix">
+                                        <div class="row" style="padding: 0px;">
+                                            <div class="pull-right col-md-6 col-xs-8 col-sm-6" style="float:right;">
+                                                <span style="background: #1fcda4 none repeat scroll 0 0;float: right;">
+                                                    {{message.message_body|default_if_none:""}}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding: 0px;">
+                                            <div class="pull-right col-md-12 col-xs-12 col-sm-12" style="text-align: right;color:#d0cdcd;">{{message.create_on}}</div>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% else %}
+                                <li class="right clearfix  {{message.recipient.username}}_plus_{{message.sender.username}} {{message.sender.username}}_plus_{{message.recipient.username}}">
+                                    <div class="chat-body1 clearfix">
+                                        <div class="row" style="padding: 0px;">
+                                            <div class="pull-left col-md-6 col-xs-8 col-sm-6" style="float:left;">
+                                                <span style="background: #6d6d6d none repeat scroll 0 0;float: left;">
+                                                    {{message.message_body|default_if_none:""}}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding: 0px;">
+                                            <div class="pull-left col-md-12 col-xs-12 col-sm-12" style="text-align: left;color:#d0cdcd;">{{message.create_on}}</div>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endif %}
+                         {% endfor %}
+                     </ul>
+                 </div><!--chat_area-->
+                 <div class="input-group" style="width:100%;">
+                    <textarea id="chat_area_box" class="form-control" rows="3" placeholder="Write Message" style="resize:none;border: none;border-top: 2px solid black;"></textarea>
+                    <span class="input-group-addon btn" onclick="send_chat()" style="background: #1fcda4 none repeat scroll 0 0;">Send</span>
+                 </div>
+             <br />
+             </div>
+         </div> <!--message_section-->
+      </div>
+   </div>
+</div>
+{% endif %}
+<style>
+    .chat_area {
+      float: left;
+      overflow-x: hidden;
+      overflow-y: auto;
+      width: 100%;
+    }
+    .chat_area li {
+      padding: 14px 14px 0;
+    }
+    .chat_area li .chat-img1 img {
+      height: 40px;
+      width: 40px;
+    }
+    .chat_area .chat-body1 {
+      margin-left: 50px;
+    }
+    .chat-body1 span{
+        padding: 10px;
+        border-radius: 10px;
+        color: whitesmoke;
+    }
+    .chat_area .admin_chat .chat-body1 {
+      margin-left: 0;
+      margin-right: 50px;
+    }
+    .chat_area li:last-child {
+      padding-bottom: 10px;
+    }
+    .message_write {
+      float: left;
+      padding: 15px
+    }
+
+    .message_write textarea.form-control {
+      height: 70px;
+      padding: 10px;
+    }
+    .chat-img img {
+       height: 34px;
+       width: 34px;
+    }
+    .chat-body {
+       margin-left: 60px;
+    }
+    .header_sec{
+        margin-top: 7px;
+    }
+</style>
+{% block footer_scripts %}
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <!--<script src="/static/js/apis/message_api.js"></script>-->
+    <!--<script src="/static/js/main.js"></script>-->
+    <script type="text/javascript">
+        $("document").ready(function(){
+            sender_id = '{{sender_id}}';
+            sender_username = "";
+            current_user = '{{user.username}}';
+            $("#chat_area_box").keypress(function(e) {
+                if(e.which == 13) {
+                    send_chat();
+                }
+            });
+        });
+        function send_chat(){
+            var msg_obj = {
+                'message_body':$("#chat_area_box").val(),
+                'recipient':"/api/users/"+sender_id+"/",
+                'sender': "/api/users/{{user.id}}/",
+            };
+            var create_message_obj = create_message(msg_obj);
+
+            if (create_message_obj){
+                var chat_class = sender_username+"_plus_{{user.username}} {{user.username}}_plus_"+sender_username;
+                var message_template = '<li class="right clearfix admin_chat '+chat_class +' style="display:none;">';
+                message_template += '<div class="chat-body1 clearfix"><div class="row" style="padding: 0px;">';
+                message_template += ' <div class="pull-right col-md-6 col-xs-6 col-sm-6" style="float:right;">';
+                message_template += '<span style="float:right;background: #1fcda4 none repeat scroll 0 0">'+$("#chat_area_box").val()+'</span>';
+                message_template += '</div></div><div class="row" style="padding: 0px;"><div class="pull-right col-md-12 col-xs-12 col-sm-12" style="text-align: right;color:#d0cdcd;">now</div>';
+                message_template += '</div></div></li>';
+                $("#chat_area_block").append(message_template);
+                $("#chat_area_box").val("");
+                $(".chat_area").animate({ scrollTop: $(".chat_area")[0].scrollHeight}, 1000);
+                //window.location.assign("/message/message_box/")
+            }
+        }
+    </script>
+{% endblock footer_scripts %}
+{% endblock content %}

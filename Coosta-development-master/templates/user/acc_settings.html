@@ -1,0 +1,387 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- DataTables CSS -->
+<link href="/static/dashboard-admin/css/dataTables.bootstrap.css" rel="stylesheet">
+<!-- DataTables Responsive CSS -->
+<link href="/static/dashboard-admin/css/dataTables.responsive.css" rel="stylesheet">
+
+<style>
+    #image_stack{
+        background-repeat: repeat-x;
+        height:106px;
+        margin-top: 13px;
+        overflow-y: auto;
+    }
+    #image_stack .existingTag{
+        width: 100px;
+        height: 106px;
+        line-height: 20px;
+        margin-top: 0px;
+        margin-left: 9px;
+        margin-right:0px;
+        display:inline-block;
+        position:relative;
+    }
+    #image_stack .existingTag a {
+        position: absolute;
+        right: 5px;
+        top: 5px;
+        color: white;
+        width: 10px;
+        height: 10px;
+        background-color: #3AD4A7;
+        border-radius: 5px;
+        text-align: center;
+        font-size: 7px;
+        line-height: 9px;
+    }
+    #image_stack .existingTag img {
+        padding: 5px;
+    }
+</style>
+<p></p>
+<br/>
+<br/>
+<p></p>
+<br/>
+    <div class="container-fluid" xmlns="http://www.w3.org/1999/html" style="padding-right:20px;padding-left:20px;">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="text-uppercase acc_sett" style="text-align:center;color:#3AD4A7;"><b>Account Settings</b></div>
+                    <br/>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="text-uppercase acc_sett" style="text-align:left;color:black;"><b>change password</b></div>
+                    <br/>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-wrapper">
+                        {% if error %}
+                            <p style="color:red !important;"><b>{{error}}</b></p>
+                        {% endif %}
+                        <form class="form-group" method="post" name="reset_password">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label for="cur_password">Current Password</label>
+                                        <input class="form-control" autofocus="" id="cur_password" max_length="30" name="c_password"
+                                               type="password" required="" aria-required="true">
+                                    </div>
+                                    <div class="col-md-3"></div>
+                                    <div class="col-md-3"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label for="id_new_password1">New Password</label>
+                                        <input class="form-control" autofocus="" id="id_new_password1" max_length="30" name="new_password1"
+                                               type="password" required="" aria-required="true">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="id_new_password2">Confirm New Password</label>
+                                        <input class="form-control" autofocus="" id="id_new_password2" max_length="30" name="new_password2"
+                                               type="password" required="" aria-required="true">
+                                    </div>
+                                    <div class="col-md-3"></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="btn-wrapper">
+                                        <button type="submit" class="btn button-1 gradient-bg three-sharp-edge-l ">SAVE CHANGES</button>
+                                    </div>
+                                </div>
+                                <div class="col-md-3"></div>
+                                <div class="col-md-3"></div>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+            <br />
+            <hr>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="text-uppercase" style="text-align:left;color:black;font-size:26px;"><b>NOTIFICATIONS</b></div>
+                    <br/>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-wrapper">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <p>Page Visits</p>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="btn-group" data-toggle="buttons">
+                                        <label class="btn btn-default select">
+                                            <input type="radio" checked autocomplete="off">ON
+                                        </label>
+                                        <label class="btn btn-default select1 active">
+                                            <input type="radio" checked autocomplete="on">OFF
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3"></div>
+                            </div>
+                            <p></p>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <p>Offers</p>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="btn-group shadow" data-toggle="buttons">
+                                        <label class="btn btn-default select">
+                                            <input type="radio" value=""checked autocomplete="off">ON
+                                        </label>
+                                        <label class="btn btn-default select1 active">
+                                            <input type="radio" checked autocomplete="on">OFF
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3"></div>
+                            </div>
+                            <p></p>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <p>Appointments</p>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="btn-group" data-toggle="buttons">
+                                        <label class="btn btn-default select">
+                                            <input type="radio" checked autocomplete="off">ON
+                                        </label>
+                                        <label class="btn btn-default select1 active">
+                                            <input type="radio" checked autocomplete="on">OFF
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <br />
+            <hr>
+
+            <!--Non pre approved Section-->
+            <div id="non-pre-approved-section" class="row" style="display:none;">
+                <div class="col-md-12">
+                    <div class="text-uppercase" style="text-align:left;color:black;font-size:26px;"><b>Pre-Approval</b></div>
+                    <div id="hide_non_pre_approved_buttons" class="btn-wrapper" style="text-align:left">
+                        Are you a pre-approved?
+                        <button  class="btn button-1 gradient-bg three-sharp-edge-l" onclick="pre_approved_user();">Yes</button>
+                        <button  class="btn button-1 gradient-bg three-sharp-edge-l" data-toggle="collapse" data-target="#markNonPreApproved" onclick="hide_non_pre_approved_buttons();">No</button>
+                    </div>
+                    <div id="markNonPreApproved" class="collapse">
+                        Thank you, You mark that you are non-pre-approved.
+                    </div>
+                    <br/>
+                </div>
+            </div>
+
+            <!--Pre approved section-->
+            <div id="pre-approved-section" class="row" style="display:none;">
+                <div class="col-md-12">
+                    <div class="text-uppercase" style="text-align:left;color:black;font-size:26px;">Pre-Approved Documents</div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 style="color:#3AD4A7;"><b>Upload Documents</b></h5>
+                        </div>
+                    </div>
+                    <div class="row" style="display:none;">
+                        <table  width="100%" id="dataTables-example"
+                                class="table table-striped table-bordered table-hover table-responsive css-serial">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>File</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody id="user_approved_docs">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div action="/api/documents/" class="dropzone decoration" id="my-awesome-dropzone" method="POST" enctype="multipart/form-data" style="padding: 15px;min-height: 100%;max-height: 100%;border: none;">
+                            <div class="dz-message" data-dz-message style="margin: 0;top: 0px;height: 100%;">
+                                <div class="col-md-12" style="background-color: #ccc;padding: 0px;height: 100%;">
+                                    <p class="text-center text-uppercase" style="color: #333;padding-top: 16px;"><b>Drag & drop or</b>
+                                    <span style="color:red"><b style="color:#3AD4A7;">upload</b></span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <p></p>
+                    <br>
+                    <br/>
+                </div>
+            </div>
+
+            <br />
+            <hr>
+            <div class="accordion" id="accordion2">
+                <div class="container-fluid" style="padding-left:0px;">
+                    <span id="del_acc">DELETE ACCOUNT </span>
+                    &nbsp;<i class="fa fa-plus-circle" aria-hidden="true" id="delete_plus" data-toggle="collapse"
+                       data-target="#demo" onclick="hide_this();" style="cursor:pointer;color:#ccc;"></i>
+                    <p></p>
+                    <div id="demo" class="collapse">
+                        <div class="form-wrapper">
+                            {% if form.errors %}
+                                <p style="color:red !important;"><b>{{form.errors}}</b></p>
+                            {% endif %}
+                            <div class="row">
+                                <form class="form-group" method="post" action="." name="delete_account">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <label for="ent_password">Please enter the password of your account to delete the account.</label>
+                                            </div>
+                                            <div class="col-md-4"></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <input class="form-control" autofocus="" id="ent_password" max_length="30" name="e_password"
+                                                   type="password" required="" aria-required="true">
+                                            </div>
+                                            <div class="col-md-8"></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="btn-wrapper">
+                                                    <button type="submit" class="btn button-1 gradient-bg three-sharp-edge-l ">CONFIRM</button>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8"></div>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="col-md-3"></div>
+                                <div class="col-md-3"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% block footer_scripts %}
+<script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+<script src="/static/js/dropzone/dropzone.js"></script>
+<script src="/static/js/pre_approved_docs.js"></script>
+<link rel="stylesheet" href="/static/css/dropzone/dropzone.css">
+<link rel="stylesheet" href="/static/css/dropzone/basic.css">
+<script type="text/javascript">
+var check_approved_nonapproved;
+$(document).ready(function() {
+
+    $("#non-pre-approved-section").hide();
+    $("#pre-approved-section").hide();
+    csrftoken = getCookie('csrftoken');
+    set_ajax_token();
+
+    check_approved_nonapproved = checkPreApprovedorNonPreApprovedUser({{ user.id }});
+
+    // For the first time, when user dont have any entry in non-pre-approved table or pre-approved-table
+    if(check_approved_nonapproved['non_pre_approved_user']=='False' && check_approved_nonapproved['pre_approved_user']=='False'){
+        $("#non-pre-approved-section").show();
+    };
+
+    // For the second to n times when user has already selected that s/he is non-pre-approved
+    if(check_approved_nonapproved['non_pre_approved_user']=='True'){
+        $("#non-pre-approved-section").show();
+        $("#hide_non_pre_approved_buttons").hide();
+        $("#markNonPreApproved").collapse('show');
+    };
+
+    if(check_approved_nonapproved['pre_approved_user']=='True'){
+        var docs = check_approved_nonapproved['pre_approved_user_obj']['documents']
+        doc_count = 0;
+        $.each(docs, function(index, val){
+            $("#user_approved_docs").append('<tr><td>'+(index+1)+'</td><td><a href="'+docs[index]['file']+'" target="_blank">'+docs[index]['file']+'</a></td><td><a href="#" onclick="delete_doc('+docs[index]['id']+')" class="closeButton">x</a></td></tr>');
+            doc_count++;
+        })
+        if(doc_count > 0){
+            $("#user_approved_docs").parent().parent().show();
+        }
+        $("#pre-approved-section").show();
+    };
+
+    Dropzone.options.myAwesomeDropzone = {
+        maxFilesize: 20, // Size in MB
+        addRemoveLinks: true,
+        removedfile: function(file) {
+          var fileRef;
+          return (fileRef = file.previewElement) != null ?
+                  fileRef.parentNode.removeChild(file.previewElement) : void 0;
+        },
+
+        headers: {
+            'X-CSRFToken': csrftoken
+        },
+        success: function(file, response) {
+            $(".dz-preview").remove();
+            var data = {};
+
+            // Format of input data
+            // {
+            //     u'pre_approved_user': OrderedDict([(u'user', <User: coosta>)]),
+            //     u'file': <User Document (UserDocuments/Virgin-Girls-Tops-Jeans-2014-Fashion-Fist-5_L6XlEBk.jpg)>
+            // }
+            data['pre_approved_user'] = {};
+            data['pre_approved_user']['user'] = '/api/users/' + '{{ user.id }}' + '/';
+            data['file'] = {};
+            data['file'] = '/api/documents/' + response.id  + '/';
+
+            var intermediate_table_post = post_pre_approved_document(data);
+            doc_count++;
+            //$("#image_stack").prepend('<div class="existingTag"><a href="#" onclick="delete_doc('+response['id']+')" class="closeButton">x</a><img id="'+response['id']+'" style="height: 106px;width: 100px;" src="'+response['file']+'" /></div>');
+            $("#user_approved_docs").append('<tr><td>'+doc_count+'</td><td><a href="'+response['file']+'" target="_blank">'+response['file']+'</a></td><td><a href="#" onclick="delete_doc('+response['id']+')" class="closeButton">x</a></td></tr>');
+            if(doc_count > 0){
+                $("#user_approved_docs").parent().parent().show();
+            }
+        }
+
+    };
+});
+
+function delete_doc(id){
+    var response = delete_document('/api/documents/'+id+'/');
+    location.reload();
+
+};
+
+function hide_non_pre_approved_buttons(){
+    $("#hide_non_pre_approved_buttons").hide();
+    var result = nonPreApprovedUser({{ user.id }});
+};
+
+function hide_this(){
+    $("#delete_plus").hide();
+    $("#del_acc").hide();
+};
+
+function pre_approved_user(){
+    $("#non-pre-approved-section").hide();
+    $("#pre-approved-section").show();
+
+    var result = preApprovedUser({{ user.id }});
+};
+
+</script>
+{% endblock footer_scripts %}
+{% endblock content %}

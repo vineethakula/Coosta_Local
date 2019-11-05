@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="spa-heading">
+    <h2 class="text-uppercase spa-heading-title"><b>Help & Faq</b></h2>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 spa-container">
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="form-group">
+                    <label for="message" style="font-size:24px;">HELP</label>
+                    <textarea class="form-control" id="message" name="message" minlength="10" rows="4"
+                              placeholder="Enter your message"></textarea>
+                    <span id="message_error"></span>
+                </div>
+                <div class="btn-wrapper col-md-4 pull-left" style="padding-left:0px;">
+                    <input type="hidden" id="property_id" name="property_id">
+                    <input type="hidden" id="owner_id" name="owner_id">
+                    <button type="submit" onclick="return help_faq_message({{user.id}});"
+                                class="btn button-1 gradient-bg three-sharp-edge-l" style="color:white;">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SEND&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 spa-container">
+            <!--TODO Replace the dummy list variable with the model list object and iterate over it.-->
+            {% with '1 2 3' as list %}
+            {% for i in list.split %}
+                <div class="question-answer">
+                    <!--TODO change the dummy list id with list object id.-->
+                    <div class="shadow-box-01 spa-container-panel-new" id="q{{ i }}">
+                        <span class="pull-right">
+                                <i class="fa fa-plus" aria-hidden="true" style="color:#762D6A"
+                                   onclick="myFunction({{ i }}, {{ i }})" role="button">
+                                </i>
+                        </span>
+                        <p>
+                            <b>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</b>
+                        </p>
+                    </div>
+                    <!--TODO change the dummy list id with list object id.-->
+                    <div class="shadow-box-01 spa-container-panel-show" id="a{{ i }}" style="display:none;">
+                        <span class="pull-right">
+                                <i class="fa fa-minus" aria-hidden="true" style="color:#762D6A"
+                                   onclick="myFunction2({{ i }}, {{ i }})" role="button"></i>
+                        </span>
+                        <p>
+                            <b>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</b>
+                            <br/>
+                        </p>
+                        <p>
+                            Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                            Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                            Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                            Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+            {% endwith %}
+        </div>
+    </div>
+</div>
+<script>
+    function myFunction(ans_id, ques_id) {
+        if($("#a" +ans_id).css("display") === "none"){
+            $("#a" +ans_id).css("display", "block");
+            $("#q" +ques_id).css('background', 'rgba(158, 158, 158, 0.28)');
+        }
+    }
+    function myFunction2(ans_id, ques_id) {
+        if($("#a" +ans_id).css("display") === "block"){
+            $("#a" +ans_id).css("display", "none");
+            $("#q" +ques_id).css('background', 'none');
+        }
+    }
+</script>
+
+{% endblock content %}

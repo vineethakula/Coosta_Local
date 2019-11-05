@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" href="/static/splash/images/logo.ico">
+        <title>Coosta LLC</title>
+
+        <!-- CSS -->
+        <link rel="stylesheet" href="/static/splash/css/bootstrap.css">
+        <link rel="stylesheet" href="/static/splash/css/animate.css">
+		<link rel="stylesheet" href="/static/splash/css/form-elements.css?{% now 'U' %}">
+        <link rel="stylesheet" href="/static/splash/css/style.css?{% now 'U' %}">
+        <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="/static/splash/js/html5shiv.js"></script>
+            <script src="/static/splash/js/respond.min.js"></script>
+        <![endif]-->
+
+    </head>
+
+    <body>
+        <!-- Top content -->
+        <div style="position: relative; z-index: 0; background: none repeat scroll 0% 0% transparent;" class="top-content">
+            <div class="inner-bg">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12 text">
+                            <!--<h1 style="visibility: visible; animation-name: fadeInLeftBig;" class="wow fadeInLeftBig animated"><strong>Coosta</strong> LLC </h1>-->
+                            <h1 style="visibility: visible; animation-name: fadeInLeftBig;" class="wow fadeInLeftBig animated"><strong>
+                                <img src="/static/splash/images/logo.png">
+                            </strong> </h1>
+                            <!--<div style="visibility: visible; animation-name: fadeInLeftBig;" class="description wow fadeInLeftBig animated">-->
+                            	<!--<p style="font-size: large;color: #eae9e9;">-->
+	                            	<!--To use Coosta, Please fill the Activation Code that were shared with you.-->
+                            	<!--</p>-->
+                            <!--</div>-->
+                            <div style="margin-top: 12%;visibility: visible; animation-name: fadeInUp;" class="top-big-link wow fadeInUp animated">
+                                <div class="col-sm-2"></div>
+								<div class="col-sm-8">
+									<!--<button type="button" id="sign_up" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">-->
+                                        <!--Sign up-->
+                                    <!--</button> now and be a part of the future of home-buying-->
+                                    <div class="">
+                                        <h4 style="color:#888;" class="modal-title">Activate & Sign up now and be a part of the future of home-buying</h4>
+                                    </div>
+                                    <div class="modal-content" style="padding:30px;">
+                                      {% if form %}
+                                        <form id="activation_code_form" action="" method="post" onsubmit="return submit_activation_form()">{% csrf_token %}
+                                          <div class="row">
+                                              <div class="col-sm-3" style="margin-top: 1%;">
+                                                  Activation Code
+                                              </div>
+                                              <div class="col-sm-6">
+                                                  <!--{{ form.password }}-->
+                                                  <input id="id_password" name="password" type="text" required="" value="">
+                                              </div>
+                                              <div class="col-sm-3" style="margin-top: 1%;">
+                                                  <input type="submit" value="Activate Coosta" />
+                                              </div>
+                                          </div>
+                                      </form>
+                                        {% endif %}
+                                    </div>
+								</div>
+                                <div class="col-sm-2"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+		</div>
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 id="heading" class="modal-title">Register</h4>
+                    </div>
+                    <div id="modal-body" class="modal-body">
+                        <form style="display:none;" id="ac_sign_up" role="form">
+                            <div class="form-group">
+                                <label class="sr-only" for="form-email_ac">Email Address</label>
+                                <input name="form-email_ac" placeholder="Email..." class="form-email form-control" id="form-email_ac" type="text" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="sr-only" for="form-ac">Activation Code</label>
+                                <input name="form-ac" placeholder="Activation Code" class="form-ac form-control" id="form-ac" type="text" required>
+                            </div>
+                            <button type="button" class="btn" onclick="register_with_ac()">
+                                Register
+                            </button>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+	        <div class="container">
+	            <div class="row">
+                    <div class="col-sm-12 footer-copyright">
+                    	© Coosta LLC.
+                    </div>
+                </div>
+	        </div>
+        </footer>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script>
+            $('document').ready(function(){
+              var activation_code = localStorage.getItem('activation_code').replace("\"", "").replace("\"", "");
+              $("#id_password").val(activation_code);
+              var activation_code_passed = localStorage.getItem('activation_code_passed');
+              if(activation_code_passed){
+                $("#activation_code_form").submit();
+              }
+            });
+
+            function submit_activation_form(){
+                localStorage.setItem('activation_code', JSON.stringify($("#id_password").val()));
+                return true;
+            }
+        </script>
+	</body>
+</html>

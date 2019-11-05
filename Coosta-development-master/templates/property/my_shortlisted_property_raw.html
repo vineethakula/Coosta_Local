@@ -1,0 +1,187 @@
+    <style>
+        @media only screen and (min-width : 268px){
+            #property_container {
+                width: 100%;
+             }
+        }
+
+        @media only screen and (min-width : 768px){
+            #property_container {
+                width: 80%;
+             }
+        }
+
+        @media only screen and (min-width : 1200px){
+            #property_container {
+                width: 80%;
+             }
+        }
+    </style>
+    <p></p>
+    <br/>
+    <br/>
+    <div id="property_container" class="container-fluid">
+        <div class="row">
+        	<div class="col-md-12">
+                   <div class="col-md-12 text-uppercase" style="text-align:center;color:#3AD4A7;font-size:26px;"><b>My Favourites</b>
+                   </div>
+               </div>
+               <div class="col-md-12 text-uppercase" style="text-align:center;color:#3AD4A7;font-size:26px;">
+                   <span id="prop_count" style="color:#cecccc; font-size:22px;text-transform:capitalize;"></span>
+               </div>
+               <br/>
+               <div class="col-md-6">
+                   <a href="/">
+                       <button type="button" class="btn button-1 gradient-bg three-sharp-edge-l col-md-6 col-xs-12 text-uppercase" style="margin-bottom:5px !important;">
+                           <span class="fa fa-plus" style="color:white;font-size:12px;">&nbsp;&nbsp;&nbsp;&nbsp;<b>SEARCH HOMES</b></span>
+                       </button>
+                   </a>
+               </div>
+               <div class="col-md-6">
+                   <a href="#">
+                       <button type="button" class="btn button-1 gradient-bg three-sharp-edge-l col-md-6 col-xs-12 pull-right text-uppercase">
+                           <span style="color:white;font-size:12px;">&nbsp;&nbsp;&nbsp;&nbsp;<b>GET PRE APPROVED</b></span>
+                       </button>
+                   </a>
+               </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="property-list-view col-md-12" style="height:100%;">
+                <ul class="row properties_data" id="results_paginate">
+
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div id="pagination" style="margin:auto;display:table;"></div>
+            </div>
+        </div>
+    </div>
+{% block footer_scripts %}
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.simplePagination.js"></script>
+    <link type="text/css" rel="stylesheet" href="/static/css/simplePagination.css"/>
+    <!--<script src="/static/js/apis/property_apis.js"></script>-->
+    <script type="text/javascript">
+        var property_data = "";
+        $("document").ready(function(){
+            render_property2("{{user.id}}");
+        });
+
+        function get_property_base_image(image_array){
+            if(image_array.length >= 1){
+                return get_properties_images_obj(image_array[0]).responseJSON.image;
+            }
+            else{
+                return '/static/images/no-image.png'
+            }
+        }
+
+        function render_property2(filter){
+            $("#results_paginate").html("")
+            var csrftoken = getCookie('csrftoken');
+            var data = { "X-CSRFToken": csrftoken}
+            var url = shortlisted_property_base_url + '?user=' + filter;
+            //var url = shortlisted_property_base_url + '?' + filter;
+            //property_data = get_shortlisted_properties(data, url);
+            property_data = get_shortlisted_properties_obj(url).responseJSON.results;
+            if(property_data.length <= 1){
+                $("#prop_count").html(property_data.length.toString() + " Property");
+            }
+            else{
+                $("#prop_count").html(property_data.length.toString() + " Properties");
+            }
+            for(var i=0; i<property_data.length; i++){
+                if(property_data[i].property.images.length >= 1){
+                    var prop_image = '/static/images/no-image.png';
+                    for(var j=0; j<property_data[i].property.images.length; j++){
+                        if(property_data[i].property.images[j].image.includes('virtual') === false){
+                            prop_image = property_data[i].property.images[j].image;
+                        }
+                    }
+                }
+                var temp_status = property_data[i].property['status']['status'];
+                var template = '<div>';
+                template += '<li class="col-xs-12 col-sm-12 col-md-12 page" style="list-style:none;">';
+                template += '<div class="row">';
+                template += '<div class="col-md-3"></div>';
+                template += '<div class="col-xs-12 col-sm-12 col-md-12 text-center">';
+                template += '<ul id="'+property_data[i].property['id']+'" class="col-sm-12">';
+                template += '<li title="Receive/Negotiate Offers" class="offers prop-icon" style="display:inline-block;width:33%;border:white;">';
+                template += '<i class="custom-icon fa fa-list-alt fa-3x"></i>';
+                template += '<hr class="text-center custom-icon-hr">';
+                template += '</li>';
+                template += '<li title="Sign The Contract" class="sign_contract prop-icon" style="display:inline-block;width:33%;border:white;">';
+                template += '<i class="custom-icon fa  fa-file-text-o fa-3x"></i>';
+                template += '<hr class="text-center custom-icon-hr">';
+                template += '</li>';
+                template += '<li title="Send To Escrow" class="escrow prop-icon" style="display:inline-block;width:33%;border:white;">';
+                template += '<i class="custom-icon fa fa-pencil-square-o fa-3x"></i>';
+                template += '</li>';
+                template += '</ul>';
+                template += '</div>';
+                template += '</div>';
+                template += '<br>';
+                template += '<a href="/property/preview/'+property_data[i].property.id+'/" style="text-decoration:none;color:black;height:200px;">';
+                template += '<div class="shadow-box clearfix">';
+                template += '<figure class="col-xs-12 col-sm-4 col-md-2 nopadding" style="border-bottom: 1px solid #cccccc;border-right: 1px solid #cccccc;">';
+                template += '<img src='+prop_image+' width="265px" height="200px">';
+                template += '</figure>';
+                template += '<div class="col-xs-12 col-sm-8 col-md-4" style="color:black;height:200px;">';
+                template += '<p></p>';
+                if(property_data[i].property.property_title){
+                    template += '<h5>'+property_data[i].property.property_title+'</h5>';
+                }
+                else{
+                    template += '<br />';
+                }
+                template+= '<i onclick="remove_shortlist_property('+property_data[i].id+')" class="fa fa-trash-o pull-right" data-toggle="dropdown" style="color:#62295C;font-weight: bolder;font-size: large;"></i>';
+                template += '<p># '+property_data[i].property.address+'</p>';
+                template += '<div class="price">$'+property_data[i].property.property_value.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+                template += '</div>';
+                template += '<div class="listed pull-left" style="margin-top:11px; color:#ccc;">Listed on '+property_data[i].property.listed_on+'</div>';
+                template += '<table class="table table-bordered">';
+                template += '<tbody>';
+                template += '<tr>';
+                template += '<th width="33%">BEDS</th>';
+                template += '<th width="33%">BATHS</th>';
+                template += '<th width="34%">TOTAL SQFT</th>';
+                template += '</tr>';
+                template += '<tr>';
+                template += '<td>'+property_data[i].property.beds+'</td>';
+                template += '<td>'+property_data[i].property.baths+'</td>';
+                template += '<td>'+property_data[i].property.property_size+'</td>';
+                template += '</tr>';
+                template += '</tbody>';
+                template += '</table>';
+                template += '</div>';
+                template += '<div class="col-xs-12 col-sm-12 col-md-6" style="color:black; border-left:1px solid #cccccc; height:100%;padding: 0px;">';
+                template += '<p></p>';
+                template += '<div class="col-md-6 text-uppercase status"><b>Offers</b><span class="badge pull-right text-center">'+property_data[i].property.total_offer+'</span></div>';
+                template += '<div class="col-md-6 status new-status"><p class="text-uppercase"><b>Highest offer</b><p/><b class="status-result">$'+property_data[i].property.highest_offer.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+'</b></div>';
+                template += '<div class="col-md-6 text-uppercase status"><b>Statistics</b><span class="badge pull-right text-center">20</span></div>';
+                template += '<div class="col-md-6 status new-status"><p><b class="text-uppercase">Property Page Visits</b></p><b class="status-result">'+property_data[i].property.page_view+'</b></div>';
+                template += '<div class="col-md-6 text-uppercase status"><b>Appointments</b><span class="badge pull-right text-center">20</span></div>';
+                template += '<div class="col-md-6 status new-status"><p><a href=# style="color:#62295C">Request an Appointments</a></p></div>';
+                template += '<div class="col-xs-4 col-sm-4 col-md-4 text-uppercase status2"><b>Status</b></div>';
+                if(property_data[i].property.active == true){
+                    template += '<div class="col-xs-8 col-sm-8 col-md-8 status3 text-center text-uppercase"><b>Active</b></div>';
+                }
+                else{
+                    template += '<div class="col-xs-8 col-sm-8 col-md-8 status3 text-center text-uppercase"><b>Inactive</b></div>';
+                }
+                template += '</div>';
+                template += '</div>';
+                template += '</a>';
+                template += '<br>';
+                template += '</li>';
+                template += '</div>';
+                $("#results_paginate").append(template);
+                $("#"+property_data[i].property['id']+" ."+temp_status).addClass('sactive');
+                $("#"+property_data[i].property['id']+" ."+temp_status + " > i").addClass('sactive');
+            };
+        }
+    </script>
+{% endblock footer_scripts %}

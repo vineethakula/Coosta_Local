@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block content %}
+<p></p>
+<br/>
+<br/>
+<style>
+        @media only screen and (min-width : 268px){
+            #col-padding {
+                width: 100%;
+             }
+        }
+
+        @media only screen and (min-width : 768px){
+            #col-padding {
+                width: 80%;
+                padding-right:80px;padding-left:70px;
+            }
+        }
+
+        @media only screen and (min-width : 1200px){
+            #col-padding {
+                width: 100%;
+                padding-right:80px;padding-left:70px;
+            }
+        }
+    </style>
+
+<script src="https://use.fontawesome.com/45e03a14ce.js"></script>
+{% if user.is_authenticated %}
+   <div class="container-fluid" id="col-padding">
+      <div class="col-md-12">
+          <div class="row">
+              <div class="col-md-12 text-center text-uppercase">
+                  <h2 style="color:#3ad4a7;"><b>Notifications</b></h2>
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-md-12">
+                  <div class="member_list" style="height:100%;">
+                      <ul id="all_notifications" class="list-unstyled">
+                          <p></p>
+                      </ul>
+                  </div>
+              </div>
+          </div>
+      </div>
+   </div>
+{% endif %}
+<style>
+    #custom-search-input {
+        background: #e8e6e7 none repeat scroll 0 0;
+        margin: 0;
+        padding: 10px;
+    }
+    #custom-search-input .search-query {
+        background: #fff none repeat scroll 0 0 !important;
+        border-radius: 4px;
+        height: 33px;
+        margin-bottom: 0;
+        padding-left: 7px;
+        padding-right: 7px;
+    }
+    #custom-search-input button {
+        background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+        border: 0 none;
+        border-radius: 3px;
+        color: #666666;
+        left: auto;
+        margin-bottom: 0;
+        margin-top: 7px;
+        padding: 2px 5px;
+        position: absolute;
+        right: 0;
+        z-index: 9999;
+    }
+    .search-query:focus + button {
+        z-index: 3;
+    }
+    .member_list li {
+        padding: 6px;
+    }
+    .chat-img img {
+        height: 34px;
+        width: 34px;
+    }
+
+    .member_list li:last-child {
+        border-bottom:none;
+    }
+    .member_list {
+        height: 380px;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+   .member_list .chat-body {
+       margin-left: 47px;
+       margin-top: 0;
+   }
+   .member_list li:hover{
+       background-color: #3ad4a7;
+   }
+</style>
+
+{% block footer_scripts %}
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <!--<script src="/static/js/apis/message_api.js"></script>-->
+    <!--<script src="/static/js/main.js"></script>-->
+    <script type="text/javascript">
+        $("document").ready(function(){
+            var notification_data = get_my_notification(user_notification_base_url + '?' + 'property_owner=' + encodeURIComponent('{{ user.id }}')).responseJSON;
+            for(var i=0; i<notification_data.count; i++){
+                if(notification_data.results[i]['shortlisted_by']['userprofile']['profile_image']){
+                    var shortlisted_user_image = notification_data.results[i]['shortlisted_by']['userprofile']['profile_image'];
+                }
+                else{
+                    var shortlisted_user_image = "/static/images/unisex_user_logo.png";
+                }
+                var shortlisted_user_name = notification_data.results[i]['shortlisted_by']['username'];
+                if(notification_data.results[i]['property']){
+                    var shortlisted_property_id = notification_data.results[i]['property']['id'];
+                }
+                var template = '<li class="left clearfix"><a href="/property/preview/'+shortlisted_property_id+'" style="height: 60px;border-bottom: 1px solid #eceeef;">';
+                template += '<div><div class="pull-left" style="height: 55px;width: 5%;"><img style="height:55px; width:55px; border-radius:50%; border:solid 2px #3ad4a7; padding:1px;" class="img-circle" src='+shortlisted_user_image+' alt=""></div>';
+                template += '<div class="pull-right" style="width: 95%;"><span><strong>'+shortlisted_user_name+'</strong><br />'+notification_data.results[i].body+'</span></div></div>';
+                template += '</a></li>';
+                $("#all_notifications").append(template);
+            };
+        });
+    </script>
+{% endblock footer_scripts %}
+{% endblock content %}

@@ -1,0 +1,33 @@
+# If local.py is present, any settings in it will override those in base.py and dev.py.
+# Use this for any settings that are specific to this one installation, such as developer API keys.
+# local.py should not be checked in to version control.
+
+# Rename this as local.py
+
+from .base import *
+
+DEBUG = True
+
+DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, '../media').replace('\\', '/')
+
+INSTALLED_APPS += ['debug_toolbar']
+
+MIDDLEWARE_CLASSES += ['debug_toolbar.middleware.DebugToolbarMiddleware']
+
+INTERNAL_IPS += ['192.168.43.83']       # Put your machine IP here
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'coosta_db',
+        'USER': 'coosta_db_user',
+        'PASSWORD': 'coosta_db_pwd',
+        'HOST': 'localhost',  # Set to empty string for localhost.
+        'PORT': '3306',  # Set to empty string for default.
+        'CONN_MAX_AGE': 600,  # number of seconds database connections should persist for
+    }
+}

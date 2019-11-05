@@ -1,0 +1,14 @@
+Django==1.10.3
+djangorestframework
+django-lockdown
+markdown
+django-filter
+mysql-python
+pillow
+requests
+xmltodict
+django-registration
+django-debug-toolbar
+rest_framework_custom_viewsets
+boto
+django-storages

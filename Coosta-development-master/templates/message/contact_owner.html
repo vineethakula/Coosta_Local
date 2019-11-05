@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block content %}
+<p></p>
+<br/>
+<br/>
+<p></p>
+<br/>
+{% if user.is_authenticated %}
+    <div class="row" style="margin-right: auto;margin-left: auto;">
+        <br>
+        <div class="col-md-3"></div>
+        <div class="col-md-6" style="box-shadow:0 0 5px 2px #ccc;">
+            <p></p><br>
+            <h3 class="text-uppercase text-center"><b>Contact the Owner</b></h3>
+            <div class="col-md-6">
+                <p></p>
+                <div class="text-center">
+                    <img id="owner_image1" src="/static/images/unisex_user_logo.png" class="img-circle" alt="owner-image" width="150px"
+                         height="150px" style="border-radius:50%; border:1px solid #4CAF50;padding:7px;">
+                    <h3><b id="owner_name1"></b></h3>
+                    <p style="color:#ccc;"></p>
+                </div>
+                <hr>
+            </div>
+            <div class="col-md-6">
+                <p></p>
+                <h3 id="user_name"><b>{{ user.username }}</b></h3>
+                <p></p>
+                <div class="form-group">
+                    <label for="message" style="color:#ccc; font-size:12px;">Leave A Message</label>
+                    <textarea class="form-control" id="message" name="message" minlength="10" rows="4"></textarea>
+                    <span id="message_error"></span>
+                </div>
+                <div class="btn-wrapper col-md-12">
+                    <!--<form class="" action="/" method="post" onsubmit="return send_message_arg();">-->
+                        <input type="hidden" id="property_id" name="property_id">
+                        <input type="hidden" id="owner_id" name="owner_id">
+                        <button type="submit" onclick="return submit_message({{user.id}});"
+                                class="btn button-1 gradient-bg three-sharp-edge-l" style="color:white;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SEND&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                    <!--</form>-->
+                </div>
+            </div>
+            <p>&nbsp;</p>
+        </div>
+    </div>
+{% else %}
+    <div class="row" style="margin-right:auto;margin-left:auto;">
+        <br>
+        <div class="col-md-3"></div>
+        <div class="col-md-6" style="box-shadow:0 0 5px 2px #ccc;">
+            <p></p><br>
+            <h3 class="text-uppercase text-center"><b>Contact the Owner</b></h3>
+            <div class="col-md-6">
+                <p></p>
+                <div class="text-center">
+                    <img id="owner_image2" src="/static/images/unisex_user_logo.png" class="img-circle" alt="owner-image" width="150px"
+                         height="150px" style="border-radius:50%; border:2px solid #4CAF50;padding:7px;">
+                    <h3><b id="owner_name2"></b></h3>
+                    <p style="color:#ccc;"></p>
+                </div>
+                <hr>
+            </div>
+            <div class="col-md-6">
+                <p></p>
+                <div class="form-wrapper">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label for="exampleInputName">Name</label>
+                            <input type="text" class="form-control" id="contact_name" name="contact_name">
+                            <span class="message_error" id="contact_name_error"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputNumber">Number</label>
+                            <input type="text" class="form-control" id="contact_number" name="contact_number">
+                            <span class="message_error" id="contact_number_error"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail">Email</label>
+                            <input type="text" class="form-control" id="contact_email" name="contact_email">
+                            <span class="message_error" id="contact_email_error"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputMessage">Message</label>
+                            <textarea  class="form-control" id="contact_message" name="contact_message" minlength="10" rows="4"></textarea>
+                            <span class="message_error" id="contact_message_error"></span>
+                        </div>
+                        <div class="btn-wrapper">
+                            <input type="hidden" id="property_id" name="property_id">
+                            <input type="hidden" id="owner_id" name="owner_id">
+                            <button type="submit" onclick="return anonymous_submit_message();"
+                                class="btn button-1 gradient-bg three-sharp-edge-l" style="color:white;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SEND&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                        </div>
+                    </div>
+
+                </div><br>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+{% block footer_scripts %}
+    <script src="/static/js/jquery-1.12.0.min.js"></script>
+    <!--<script src="/static/js/apis/message_api.js"></script>-->
+    <!--<script src="/static/js/main.js"></script>-->
+    <script type="text/javascript">
+        $("document").ready(function(){
+            $("#owner_id").val(localStorage.getItem('owner').replace("\"", "").replace("\"", ""));
+            $("#property_id").val(localStorage.getItem('property').replace("\"", "").replace("\"", ""));
+            $("#owner_image1").attr('src', localStorage.getItem('owner_image').replace("\"", "").replace("\"", ""));
+            $("#owner_image2").attr('src', localStorage.getItem('owner_image').replace("\"", "").replace("\"", ""));
+            $("#owner_name1").html(localStorage.getItem('owner_name').replace("\"", "").replace("\"", ""));
+            $("#owner_name2").html(localStorage.getItem('owner_name').replace("\"", "").replace("\"", ""));
+        });
+    </script>
+{% endblock footer_scripts %}
+{% endblock content %}

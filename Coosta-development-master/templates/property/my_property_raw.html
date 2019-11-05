@@ -1,0 +1,255 @@
+    <style>
+        @media only screen and (min-width : 268px){
+            #property_container {
+                width: 100%;
+             }
+        }
+
+        @media only screen and (min-width : 768px){
+            #property_container {
+                width: 80%;
+             }
+        }
+
+        @media only screen and (min-width : 1200px){
+            #property_container {
+                width: 80%;
+             }
+        }
+    </style>
+    <p></p>
+    <br/>
+    <br/>
+    <p></p>
+    <br/>
+    <div id="property_container" class="container-fluid">
+        <div class="row">
+        	<div class="col-md-12">
+        		<div class="col-md-12 text-uppercase" style="text-align:center;color:#3AD4A7;font-size:26px;"><b>My Properties</b></div>
+                   <div class="col-md-12 text-uppercase" style="text-align:center;color:#3AD4A7;font-size:26px;">
+                       <span id="prop_count" style="color:#cecccc; font-size:22px;text-transform:capitalize;"></span>
+                   </div>
+                   <div class="col-md-2 col-sm-4 col-xs-12" style="text-align:center;color:#3AD4A7;font-size:26px;">
+                       <a href="{% url 'add_property' %}">
+                           <button type="button" class="btn button-1 gradient-bg three-sharp-edge-l pull-left text-uppercase" style="width:100%;">
+                               <span class="fa fa-plus" style="color:white;font-size:12px;">&nbsp;&nbsp;&nbsp;&nbsp;<b>List a Home</b></span>
+                           </button>
+                       </a>
+                   </div>
+
+                    <br/>
+                    <br/>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="property-list-view col-md-12" style="height:100%;">
+                <ul class="row properties_data" id="results_paginate">
+                </ul>
+            </div>
+        </div>
+        <!--<div class="row">-->
+            <!--<div class="col-md-12">-->
+                <!--<div class="col-md-4"></div>-->
+                <!--<div id="pagination" class="col-md-6 text-center"></div>-->
+                <!--<div class="col-md-2"></div>-->
+            <!--</div>-->
+        <!--</div>-->
+    </div>
+{% block footer_scripts %}
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.simplePagination.js"></script>
+    <link type="text/css" rel="stylesheet" href="/static/css/simplePagination.css"/>
+    <!--<script src="/static/js/apis/property_apis.js"></script>-->
+    <script type="text/javascript">
+        var property_data = "";
+        var property_objects = {};
+        $("document").ready(function(){
+            render_property("{{user.id}}");
+        });
+
+        function get_property_base_image(image_array){
+            if(image_array.length >= 1){
+                return get_properties_images_obj(image_array[0]).responseJSON.image;
+            }
+            else{
+                return '/static/images/no-image.png'
+            }
+        }
+
+        function render_property(filter){
+            //$("#results_paginate").html("")
+            var csrftoken = getCookie('csrftoken');
+            var data = { "X-CSRFToken": csrftoken}
+            var url = property_base_url + '?user=' + "{{ user.id}}&completed=true&ordering=-listed_on";
+            //var url = property_base_url + '?' + filter;
+            var property_data = search_properties(data, url).responseJSON;
+            var count = property_data.count;
+            render_template(property_data);
+            var url = property_base_url + '?user=' + "{{ user.id}}&completed=false&ordering=-listed_on";
+            var property_data = search_properties(data, url).responseJSON;
+            count = count + property_data.count;
+            render_template(property_data);
+            if(count <= 1){
+                $("#prop_count").html(count.toString() + " Property");
+            }
+            else{
+                $("#prop_count").html(count.toString() + " Properties");
+            }
+        }
+
+        function render_template(property_data){
+            var incomplete_flag = false;
+            for(var i=0; i<property_data.count; i++){
+                property_objects[property_data.results[i].id] = property_data.results[i];
+                if(property_data.results[i].images.length >= 1){
+                    var prop_image = '/static/images/no-image.png';
+                    for(var j=0; j<property_data.results[i].images.length; j++){
+                        if(property_data.results[i].images[j].image.includes('virtual') === false){
+                            prop_image = property_data.results[i].images[j].image;
+                        }
+                    }
+                }
+                else{
+                    var prop_image = '/static/images/no-image.png'
+                }
+                var temp_status = property_data.results[i]['status']['status'];
+                var template = '<div>';
+                template += '<li class="col-xs-12 col-sm-12 col-md-12 page" style="list-style:none;">';
+                if(property_data.results[i].completed == false && incomplete_flag == false){
+                    template += '<br/>';
+                    template += '<div style="text-align:center;color:#3AD4A7;font-size:26px;"><b>Incomplete Listings</b></div>';
+                    template += '<br/>';
+                    incomplete_flag = true;
+                }
+                template += '<div class="row">';
+                template += '<div class="col-md-3"></div>';
+                template += '<div class="col-xs-12 col-sm-12 col-md-12 text-center">';
+                if(property_data.results[i].completed){
+                    template += '<ul id="'+property_data.results[i]['id']+'" class="col-sm-12">';
+                    template += '<li title="Receive/Negotiate Offers" class="offers prop-icon" style="display:inline-block;width:33%;border:white;">';
+                    template += '<i class="custom-icon fa fa-list-alt fa-3x"></i>';
+                    template += '<hr class="text-center custom-icon-hr">';
+                    template += '</li>';
+                    template += '<li title="Sign The Contract" class="sign_contract prop-icon" style="display:inline-block;width:33%;border:white;">';
+                    template += '<i class="custom-icon fa  fa-file-text-o fa-3x"></i>';
+                    template += '<hr class="text-center custom-icon-hr">';
+                    template += '</li>';
+                    template += '<li title="Send To Escrow" class="escrow prop-icon" style="display:inline-block;width:33%;border:white;">';
+                    template += '<i class="custom-icon fa fa-pencil-square-o fa-3x"></i>';
+                    template += '</li>';
+                    template += '</ul>';
+                }
+                else{
+                    template += '<ul id="'+property_data.results[i]['id']+'" class="col-sm-12">';
+                    template += '<li title="Edit Your Property" class="edit prop-icon" style="display:inline-block;width:33%;border:white;">';
+                    template += '<i class="custom-icon fa fa-list-alt fa-3x"></i>';
+                    template += '<hr class="text-center custom-icon-hr">';
+                    template += '</li>';
+                    template += '<li title="Get Valuations" class="get_valuation prop-icon" style="display:inline-block;width:33%;border:white;">';
+                    template += '<i class="custom-icon fa  fa-file-text-o fa-3x"></i>';
+                    template += '<hr class="text-center custom-icon-hr">';
+                    template += '</li>';
+                    template += '<li title="Publish" class="published prop-icon" style="display:inline-block;width:33%;border:white;">';
+                    template += '<i class="custom-icon fa fa-pencil-square-o fa-3x"></i>';
+                    template += '</li>';
+                    template += '</ul>';
+                }
+                template += '</div>';
+                template += '</div>';
+                template += '<br>';
+
+                template += '<div class="shadow-box clearfix">';
+                template += '<a href="/property/preview/'+property_data.results[i].id+'/" style="text-decoration:none;color:black;height:200px;">';
+                template += '<figure class="col-xs-12 col-sm-4 col-md-2 nopadding" style="border-bottom: 1px solid #cccccc;border-right: 1px solid #cccccc;">';
+                template += '<img src='+prop_image+' width="265px" height="200px">';
+                template += '</figure>';;
+                template += '</a>';
+                template += '<div class="col-xs-12 col-sm-8 col-md-4" style="color:black;height:200px;">';
+                template += '<p></p>';
+                if(property_data.results[i].property_title){
+                    template += '<h5>'+property_data.results[i].property_title+'</h5>';
+                }
+                else{
+                    template += '<h5>Enter Property Title</h5>';
+                }
+                template+= '<div class="dropdown" style="cursor:pointer;">';
+                template+= '<i class="fa fa-gear pull-right" data-toggle="dropdown" style="color:#62295C; margin-top:-27px;font-size: 30px;"></i>';
+                template+= '<ul class="dropdown-menu dropdown-menu-right settings">';
+                template+= '<li><a href="/property/preview/'+property_data.results[i].id+'/">View Property</a></li>';
+                template+= '<li><a href="/property/my_property/edit/'+property_data.results[i].id+'/">Edit Property Details</a></li>';
+                if(property_data.results[i].active){
+                    template+= '<li><a id="status_action_'+property_data.results[i].id+'" href="#" onclick="return deactivateProperty('+property_data.results[i].id+')">Deactivate Property</a></li>';
+                }
+                else{
+                    template+= '<li><a id="status_action_'+property_data.results[i].id+'" href="#" onclick="return activateProperty('+property_data.results[i].id+')">Activate Property</a></li>';
+                }
+                template+= '<li><a href="#">Offers Display Settings</a></li>';
+                template+= '</ul>';
+                template+= '</div>';
+                template += '<p># '+property_data.results[i].address+'</p>';
+                if(property_data.results[i].completed){
+                    template += '<div class="price">$'+property_data.results[i].property_value.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+                }
+                else{
+                    template += '<div><b>$ Enter Price</b>';
+                }
+                template += '</div>';
+                template += '<div class="listed pull-left" style="margin-top:11px; color:#ccc;">Listed on '+property_data.results[i].listed_on+'</div>';
+                template += '<table class="table table-bordered">';
+                template += '<tbody>';
+                template += '<tr>';
+                template += '<th width="33%">BEDS</th>';
+                template += '<th width="33%">BATHS</th>';
+                template += '<th width="34%">TOTAL SQFT</th>';
+                template += '</tr>';
+                template += '<tr>';
+                template += '<td>'+property_data.results[i].beds+'</td>';
+                template += '<td>'+property_data.results[i].baths+'</td>';
+                template += '<td>'+property_data.results[i].property_size+'</td>';
+                template += '</tr>';
+                template += '</tbody>';
+                template += '</table>';
+                template += '</div>';
+                template += '<div class="col-xs-12 col-sm-12 col-md-6" style="color:black; border-left:1px solid #cccccc; height:100%;padding: 0px;">';
+                template += '<p></p>';
+                if(property_data.results[i].completed){
+                    template += '<div class="col-md-6 text-uppercase status"><b>Offers</b><span class="badge pull-right text-center">'+property_data.results[i].total_offer+'</span></div>';
+                    template += '<div class="col-md-6 status new-status"><p class="text-uppercase"><b>Highest offer</b><p/><b class="status-result">$'+property_data.results[i].highest_offer.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+'</b></div>';
+                    template += '<div class="col-md-6 text-uppercase status"><b>Statistics</b><span class="badge pull-right text-center">20</span></div>';
+                    template += '<div class="col-md-6 status new-status"><p><b class="text-uppercase">Property Page Visits</b></p><b class="status-result">'+property_data.results[i].page_view+'</b></div>';
+                    template += '<div class="col-md-6 text-uppercase status"><b>Appointments</b><span class="badge pull-right text-center">20</span></div>';
+                    template += '<div class="col-md-6 status new-status"><p><b class="text-uppercase">All Appointments</b></p><b class="status-result">78</b></div>';
+                    template += '<div class="col-xs-4 col-sm-4 col-md-4 text-uppercase status2"><b>Status</b></div>';
+                }
+                else{
+                    template += '<div class="col-md-12"></div>';
+                    template += '<div class="col-md-6 text-uppercase status"><b>Offers</b></div>';
+                    template += '<div class="col-md-6 status text-center"><b class="text-uppercase pull-left">Highest offer</b><b class="pull-right">---</b></div>';
+                    template += '<div class="col-md-12"></div>';
+                    template += '<div class="col-md-6 text-uppercase status"><b>Statistics</b></div>';
+                    template += '<div class="col-md-6 status text-center"><b class="text-uppercase pull-left">Property Page Visits</b><b class="pull-right">---</b></div>';
+                    template += '<div class="col-md-12"></div>';
+                    template += '<div class="col-md-6 text-uppercase status"><b>Appointments</b></div>';
+                    template += '<div class="col-md-6 status text-center"><b class="text-uppercase pull-left">All Appointments</b><b class="pull-right">---</b></div>';
+                    template += '<div class="col-xs-4 col-sm-4 col-md-4 text-uppercase status2"><b>Status</b></div>';
+                }
+                if(property_data.results[i].active){
+                    template += '<div class="col-xs-8 col-sm-8 col-md-8 status3 text-center text-uppercase"><b id="status_'+property_data.results[i].id+'">Active</b></div>';
+                }
+                else{
+                    template += '<div class="col-xs-8 col-sm-8 col-md-8 status3 text-center text-uppercase"><b id="status_'+property_data.results[i].id+'">Inactive</b></div>';
+                }
+                template += '</div>';
+                template += '</div>';
+                template += '<br>';
+                template += '</li>';
+                template += '</div>';
+                $("#results_paginate").append(template);
+                $("#"+property_data.results[i]['id']+" ."+temp_status).addClass('sactive');
+                $("#"+property_data.results[i]['id']+" ."+temp_status + " > i").addClass('sactive');
+
+            };
+        }
+    </script>
+    {% endblock footer_scripts %}

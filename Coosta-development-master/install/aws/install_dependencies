@@ -1,0 +1,7 @@
+#!/bin/bash
+echo ""
+echo "***** Coosta install_dependencies script *****"
+date
+
+echo "Running --> yum install -y docker"
+yum install -y docker

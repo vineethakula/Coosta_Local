@@ -1,0 +1,35 @@
+#!/bin/bash
+
+echo ""
+echo "***** Coosta Docker build script *****"
+date
+
+if [ "$DEPLOYMENT_GROUP_NAME" == "Coosta-dev-Deployment-Group" ]
+then
+    export build_environment=dev
+fi
+
+if [ "$DEPLOYMENT_GROUP_NAME" == "Coosta-QA-Deployment-Group" ]
+then
+    export build_environment=QA
+fi
+
+if [ "$DEPLOYMENT_GROUP_NAME" == "Coosta-prod-Deployment-Group" ]
+then
+    export build_environment=PROD
+fi
+
+echo "build_environment --> ${build_environment}"
+
+cd /tmp
+
+ls
+
+echo "Runnig --> docker run --net=coosta_aws_net --name coosta-mysql -v /mnt/coosta_mysql_data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=coosta_db_pwd_root -e MYSQL_DATABASE=coosta_db -e MYSQL_USER=coosta_db_user -e MYSQL_PASSWORD=coosta_db_pwd -p 3306:3306 -d mysql:latest"
+docker run --net=coosta_aws_net --name coosta-mysql -v /mnt/coosta_mysql_data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=coosta_db_pwd_root -e MYSQL_DATABASE=coosta_db -e MYSQL_USER=coosta_db_user -e MYSQL_PASSWORD=coosta_db_pwd -p 3306:3306 -d mysql:latest
+
+echo "Running --> docker build --build-arg build_environment={build_environment} -t coosta ."
+docker build --build-arg build_environment=${build_environment} -t coosta .
+
+echo "Running --> docker run --net=coosta_aws_net --name coosta-server -p 80:80 -d coosta"
+docker run --net=coosta_aws_net --name coosta-server -v /mnt/coosta_media:/home/coosta/media -p 80:80 -d coosta

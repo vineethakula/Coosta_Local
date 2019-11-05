@@ -1,0 +1,698 @@
+{% extends "base.html" %}
+{% block content %}
+<p></p>
+<br/>
+<br/>
+<style>
+    footer{
+        display:none;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 col-xs-12">
+            <div class="col-md-12" style="padding: 0;">
+                <div class="row">
+                    <form class="" action="/property/list/" method="post" style="background: none;">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <div class="col-md-5 col-xs-6" style="padding: 0px 0px 0px 10px;">
+                                <input class="form-control" type="text" id="address" name="address" placeholder="Address" value="{{ address }}">
+                            </div>
+                            <div class="col-md-5 col-xs-6" style="padding: 0px 10px 0px 2px;">
+                                <input class="form-control" type="text" id="city" name="city" placeholder="City, State" value="{{ city }}, {{ state }}" onkeydown="if (event.keyCode == 13 && search_add()) { this.form.submit(); return false; }">
+                                <input class="form-control" type="hidden" id="stateSelection" name="stateSelection">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <p></p>
+                <div class="row">
+                    <div class="col-md-12">
+                        <span><b>RESULTS </b><span id="total_homes" style="font-size:12px;"></span>
+                            <i id="load_spinner" class="fa fa-spinner fa-spin" style="font-size:24px;"></i>
+                        </span>
+                    </div>
+                </div>
+                <p></p>
+                <div class="row">
+                    <div class="col-md-4 col-xs-6">
+                        <div class="dropdown">
+                            <button class="btn btn-primary" type="button" data-toggle="dropdown"
+                                    style="width:100%; color:black; background-color:transparent; border: 2px solid #3AD4A7;
+                                     border-radius: 6px 6px 6px 0px;"><b class="pull-left">SORT BY</b>
+                                <span class="font-bold font-sm float-r">
+                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                </span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li class="cheapest"><a href="#" onclick="build_filter('property_value', false)">Price Low</a>
+                                </li>
+                                <li class="costliest"><a href="#" onclick="build_filter('-property_value', false)">Price High</a>
+                                </li>
+                                <li class="latest"><a href="#" onclick="build_filter('-listed_on', false)">Latest</a>
+                                </li>
+                                <li class="low"><a href="#" onclick="build_filter('property_size', false)">Square Feet (Low)</a>
+                                </li>
+                                <li class="high"><a href="#" onclick="build_filter('-property_size', false)">Square Feet (High)</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-xs-6">
+                        <div id="refine_dropdown" class="dropdown">
+                            <button class="btn btn-primary" type="button" data-toggle="dropdown"
+                                    style="width:100%; color:black; background-color:transparent; border:2px solid #3AD4A7;
+                                    border-radius: 6px 6px 6px 0px;"><b class="pull-left"> REFINE</b>
+                                <span class="font-bold font-sm float-r">
+                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                </span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right" id="refine-dropdown">
+                                <li class="pad-20">
+                                    <span class="font-bold font-sm nomargin" style="padding: 0 0 0 15px;">REFINE SEARCH</span>
+                                    <span class="font-bold font-sm float-r hide-up" style="padding: 0 15px 0 0; cursor:pointer;">Hide
+                                        <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                    </span>
+                                </li>
+                                <hr>
+                                <li>
+                                    <form id="refine_form" class="form-horizontal profile-form">
+                                        <fieldset>
+                                            <!-- ADDRESS -->
+                                            <div class="col-md-12 col-sm-12 col-xs-12 search-refine">
+                                                <div class="control-group col-md-12 col-sm-12 col-xs-12">
+                                                    <div class="controls">
+                                                        <input id="refine_address" name="refine_address" type="text" placeholder=" Address1" class="form-control">
+                                                        <p class="help-block"></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- CITY & STATE -->
+                                            <div class="col-md-12 col-sm-12 col-xs-12 search-refine">
+                                                <div class="control-group col-md-6 col-sm-6 col-xs-6">
+                                                    <div class="controls">
+                                                        <input id="refine_city" name="refine_city" type="text" value="{{city}}" readonly autocomplete="off" class="form-control">
+                                                        <p class="help-block"></p>
+                                                    </div>
+                                                </div>
+                                                <div class="control-group col-md-6 col-sm-6 col-xs-6">
+                                                    <div class="controls">
+                                                        <input id="refine_state" name="refine_state" type="text" value="{{state}}" readonly autocomplete="off" class="form-control">
+                                                        <p class="help-block"></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- ZIPCODE -->
+                                            <div class="col-md-12 col-sm-12 col-xs-12 search-refine">
+                                                <div class="control-group col-md-12 col-sm-12 col-xs-12">
+                                                    <div class="controls">
+                                                        <input id="refine_zipcode" name="refine_zipcode" type="text" placeholder=" Zip Code" class="form-control">
+                                                        <p class="help-block"></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- PROPERTY_TYPE -->
+                                            <div class="col-md-12 col-sm-12 col-xs-12 search-refine">
+                                                <div class="control-group col-md-12 col-sm-12 col-xs-12 refine-padding">
+                                                    <div class="controls">
+                                                        <!--<input id="refine_property_type" name="refine_property_type" type="text" placeholder=" Property Type">-->
+                                                        <select style="height:38px" id="refine_property_type" name="refine_property_type" class="form-control">
+                                                            <option value>Property Type</option>
+                                                            <option value="Single family">Single family</option>
+                                                            <option value="Condo">Condo</option>
+                                                            <option value="Townhouse">Townhouse</option>
+                                                            <option value="Multi family">Multi family</option>
+                                                            <option value="Apartment">Apartment</option>
+                                                            <option value="Mobile / Manufactured">Mobile / Manufactured</option>
+                                                            <option value="Coop Unit">Coop Unit</option>
+                                                            <option value="Vacant land">Vacant land</option>
+                                                            <option value="Other">Other</option>
+                                                        </select>
+                                                        <p class="help-block"></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- PRICE -->
+                                            <div class="col-md-12 col-sm-12 col-xs-12 search-refine">
+                                                <div class="col-md-2 col-sm-2 col-xs-2">
+                                                    <label class="control-label float-l">Price</label>
+                                                </div>
+                                                <div class="control-group col-md-5 col-sm-5 col-xs-5">
+                                                    <div class="controls">
+                                                        <input id="min_price" name="min_price" type="text" placeholder="min" class="input-xlarge shadow-box-form form-control">
+                                                        <p class="help-block"></p>
+                                                    </div>
+                                                </div>
+                                                <div class="control-group col-md-5 col-sm-5 col-xs-5">
+                                                    <div class="controls">
+                                                        <input id="max_price" name="max_price" type="text" placeholder="max" class="input-xlarge shadow-box-form form-control">
+                                                        <p class="help-block"></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- BEDS -->
+                                            <div class="col-md-12 col-sm-12 col-xs-12 search-refine">
+                                                <div class="col-md-2 col-sm-2 col-xs-2">
+                                                    <label class="control-label float-l">Beds</label>
+                                                </div>
+                                                <div class="control-group col-md-5 col-sm-5 col-xs-5">
+                                                    <div class="controls">
+                                                        <input id="min_beds" name="min_beds" type="text" placeholder="min" class="input-xlarge shadow-box-form form-control">
+                                                        <p class="help-block"></p>
+                                                    </div>
+                                                </div>
+                                                <div class="control-group col-md-5 col-sm-5 col-xs-5">
+                                                    <div class="controls">
+                                                        <input id="max_beds" name="max_beds" type="text" placeholder="max" class="input-xlarge shadow-box-form form-control">
+                                                        <p class="help-block"></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- BATHS -->
+                                            <div class="col-md-12 col-sm-12 col-xs-12 search-refine">
+                                                <div class="col-md-2 col-sm-2 col-xs-2">
+                                                    <label class="control-label float-l">Baths</label>
+                                                </div>
+                                                <div class="control-group col-md-5 col-sm-5 col-xs-5">
+                                                    <div class="controls">
+                                                        <input id="min_baths" name="min_baths" type="text" placeholder="min" class="input-xlarge shadow-box-form form-control">
+                                                        <p class="help-block"></p>
+                                                    </div>
+                                                </div>
+                                                <div class="control-group col-md-5 col-sm-5 col-xs-5">
+                                                    <div class="controls">
+                                                        <input id="max_baths" name="max_baths" type="text" placeholder="max" class="input-xlarge shadow-box-form form-control">
+                                                        <p class="help-block"></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- SQFT -->
+                                            <div class="col-md-12 col-sm-12 col-xs-12 search-refine">
+                                                <div class="col-md-2 col-sm-2 col-xs-2">
+                                                    <label class="control-label float-l">SQFT</label>
+                                                </div>
+                                                <div class="control-group col-md-5 col-sm-5 col-xs-5">
+                                                    <div class="controls">
+                                                        <input id="min_sqft" name="min_sqft" type="text" placeholder="min" class="input-xlarge shadow-box-form form-control">
+                                                        <p class="help-block"></p>
+                                                    </div>
+                                                </div>
+                                                <div class="control-group col-md-5 col-sm-5 col-xs-5">
+                                                    <div class="controls">
+                                                        <input id="max_sqft" name="max_sqft" type="text" placeholder="max" class="input-xlarge shadow-box-form form-control">
+                                                        <p class="help-block"></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <div class="col-md-6 col-xs-6">
+                                            <button type="button" onclick="refine()" id="redefine" class="btn button-1 gradient-bg three-sharp-edge-l text-uppercase"
+                                                    style="color:white;">Search
+                                            </button>
+                                        </div>
+                                        <div class="col-md-6 col-xs-6">
+                                            <button type="button" class="btn button-1 gradient-bg three-sharp-edge-l text-uppercase"
+                                                    style="color:white;" onclick="reset_refine()">Reset
+                                            </button>
+                                        </div>
+                                        <br/>
+                                        <br/>
+                                    </form>
+                                    <br/>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-4"></div>
+                </div>
+                <div class="row" style="margin-right: -7px;">
+                    <div class="col-md-12">
+                        <div class="property-list-view property-list-search">
+                            <ul class="row properties_data" id="results_paginate"></ul>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-6">
+                        <div id="pagination"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xs-12 map-mobile_view" style="padding:0px;">
+            <div class="col-md-12" style="padding-right:0px; margin-left:-25px;">
+	            <div id="map"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    {% block footer_scripts %}
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.simplePagination.js"></script>
+    <link type="text/css" rel="stylesheet" href="/static/css/simplePagination.css"/>
+    <!--<script src="/static/js/apis/property_apis.js"></script>-->
+    <script type="text/javascript">
+        var autocomplete;
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+              zoom: 9,
+              center: {lat: 36.778261, lng: -119.4179324}
+            });
+            geocoder = new google.maps.Geocoder();
+            infowindow = new google.maps.InfoWindow({});
+            autocomplete = new google.maps.places.Autocomplete(
+                /** @type {!HTMLInputElement} */(document.getElementById('city')),
+                {
+                  types: ['(cities)'],
+                  componentRestrictions: {country: "us"}
+                }
+            );
+          }
+        var build_url = function(api, filter){
+            //alert()
+        };
+        var property_from = 0;
+        var property_till = 0;
+        var next_flag = true;
+        var prev_flag = false;
+
+        var search_query = "";
+        var property_data = "";
+        var filter = "";
+        $("document").ready(function(){
+            search_query = '{{ search_address }}';
+            var address = '{{ address }}';
+            var city = '{{ city }}';
+            var state = '{{ state }}';
+            filter = '&search_index__icontains=' + encodeURIComponent(address);
+            filter += '&city__icontains=' + encodeURIComponent(city);
+            filter += '&state__icontains=' + encodeURIComponent(state);
+            //if(address != ""){
+            //    filter += '&address__contains=' + encodeURIComponent(address);
+            //}
+            //if(city != ""){
+            //    filter += '&city__contains=' + encodeURIComponent(city);
+            //}
+            //if(state != ""){
+            //    if(isNaN(state)){
+            //        filter = '&state__contains=' + encodeURIComponent(state);
+            //    }
+            //    else{
+            //        filter = '&zip_code__contains=' + encodeURIComponent(state);
+            //    }
+            //}
+            render_property(filter);
+
+        });
+
+        function is_address(address){
+            address = address.split(' ');
+            if(NaN(address[0])){
+                return false;
+            }
+            else{
+                return true;
+            }
+        }
+
+        function build_filter(filt, append){
+            if(append == true){
+                filter = filter + filt;
+            }
+            else{
+                filter = replaceUrlParam(filter, 'ordering', filt);
+            }
+            property_form = 0;
+            property_till = 0;
+            render_property(filter);
+        }
+
+        function replaceUrlParam(url, paramName, paramValue){
+            if(paramValue == null)
+                paramValue = '';
+            var pattern = new RegExp('\\b('+paramName+'=).*?(&|$)')
+            if(url.search(pattern)>=0){
+                return url.replace(pattern,'$1' + paramValue + '$2');
+            }
+            //return url + (url.indexOf('?')>0 ? '&' : '?') + paramName + '=' + paramValue
+            return url + '&' + paramName + '=' + paramValue
+        }
+
+        function get_property_base_image(image_array){
+            if(image_array.length >= 1){
+                return get_properties_images_obj(image_array[0]).responseJSON.image;
+            }
+            else{
+                return '/static/images/no-image.png'
+            }
+        }
+
+        function render_property(filter){
+            set_loading(true);
+            $("#results_paginate").find("li").remove();
+            var csrftoken = getCookie('csrftoken');
+            var data = { "X-CSRFToken": csrftoken}
+            var url = property_base_url + '?' + filter;
+            property_data = search_properties(data, url).responseJSON;
+            console.log(url, property_data)
+            property_length = (property_data.count<=30) ? property_data.count : 30;
+            if(next_flag){
+                property_from = property_till + 1;
+                property_till = property_till + property_length;
+            }
+            if(prev_flag){
+                property_from = property_from - property_length;
+                property_till = property_till - property_length;
+            }
+            if(property_length == 0){
+                property_from = 0;
+                property_till = 0;
+            }
+            $("#total_homes").html("showing <u>" + property_from +" - " + property_till+ "</u> of "+ property_data.count.toString() + " homes for sale")
+            try {
+                geocodeAddress();
+            }
+            catch(err){
+                console.log(err);
+            }
+
+            for(var i=0; i<property_length; i++){
+                if(property_data.results[i]){
+                    if(property_data.results[i].images.length >= 1){
+                        var prop_image = '/static/images/no-image.png';
+                        for(var j=0; j<property_data.results[i].images.length; j++){
+                            if(property_data.results[i].images[j].image.includes('virtual') === false){
+                                prop_image = property_data.results[i].images[0].image;
+                            }
+                        }
+                    }
+                    else{
+                        var prop_image = '/static/images/no-image.png'
+                    }
+                    var template = '<a href="/property/preview/'+property_data.results[i].id+'/" style="text-decoration:none;">';
+                    template += '<li class="container-fluid page">';
+                    template += '<div style="width: 92%;margin-left: 2%;" class="shadow-box clearfix">';
+                    template += '<figure class="col-md-5" style="padding:1px;">';
+                    template += '<img src="'+prop_image+'" width="243px" height="158px">';
+                    template += '</figure>';
+                    template += '<div class="col-md-7" style="color:black;">';
+                    if(property_data.results[i].property_title){
+                        template += '<h5 style="margin-bottom:0px; margin-top:7px;">'+property_data.results[i].property_title+'</h5>';
+                    }
+                    else{
+                        template += '<h6 style="margin-bottom:0px; margin-top:7px;">&nbsp;</h6>';
+                    }
+                    template += '<p># '+property_data.results[i].address+'</p>';
+                    if(property_data.results[i].property_value != null){
+                        template += '<div class="price">$'+property_data.results[i].property_value.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+'</div>';
+                    }
+                    else{
+                        template += '<div class="price">$0.00</div>';
+                    }
+                    template += '<div class="listed">Listed on '+property_data.results[i].listed_on+'</div>';
+                    template += '<table class="table" style="border-collapse:collapse;border-spacing:0;cellspacing:0;margin-bottom:10px;">';
+                    template += '<tbody style="background-color:#eceeef;">';
+                    template += '<tr>';
+                    template += '<th style="border-right: solid 3px white;">BEDS</th>';
+                    template += '<th style="border-right: solid 3px white;">BATHS</th>';
+                    template += '<th style="background-color:#eceeef;">SQFT</th>';
+                    template += '</tr>';
+                    template += '<tr>';
+                    template += '<td style="border-right: solid 3px white;border-top: none;">'+property_data.results[i].beds+'</td>';
+                    template += '<td style="border-right: solid 3px white;border-top: none;">'+property_data.results[i].baths+'</td>';
+                    template += '<td style="border:0px;">'+property_data.results[i].property_size+'</td>';
+                    template += '</tr>';
+                    template += '</tbody>';
+                    template += '</table>';
+                    template += '</div>';
+                    template += '</div>';
+                    template += '</li>';
+                    template += '</a>';
+                    $("#results_paginate").append(template);
+                }
+            };
+            jQuery(function($) {
+            var items = $("#results_paginate .page");
+
+            var numItems = items.length;
+            var perPage = 10;
+
+            // only show the first 2 (or "first per_page") items initially
+            items.slice(perPage).hide();
+
+            // now setup pagination
+            $pagination.pagination({
+                items: numItems,
+                itemsOnPage: perPage,
+                cssStyle: "light-theme",
+                onPageClick: function(pageNumber) { // this is where the magic happens
+                    // someone changed page, lets hide/show trs appropriately
+                    var showFrom = perPage * (pageNumber - 1);
+                    var showTo = showFrom + perPage;
+
+                    items.hide() // first hide everything, then show for the new page
+                         .slice(showFrom, showTo).show();
+                    if(property_data.next){
+                        $("#pagination").append("<a onclick='render_next()' href='#'>>></a>");
+                    }
+                    if(property_data.previous){
+                        $("#pagination").prepend("<a onclick='render_prev()' href='#'><<</a>");
+                    }
+                }
+            });
+            if(property_data.next){
+                $("#pagination").append("<a onclick='render_next()' href='#'>>></a>");
+            }
+            if(property_data.previous){
+                $("#pagination").prepend("<a onclick='render_prev()' href='#'><<</a>");
+            }
+            set_loading(false);
+        });
+            //paginate();
+        }
+
+        function refine(){
+            $("#refine_dropdown").toggleClass("open");
+            //alert();
+            var refine_filter = 'search_index__icontains='+ encodeURIComponent(search_query)+'&city__icontains={{city}}&state__icontains={{state}}&address__icontains=1&zip_code__icontains=1&home_type__icontains=1&property_value__lte=1&property_value__gte=1&beds__lte=1&beds__gte=1&baths__lte=1&baths__gte=1&property_size__lte=1&property_size__gte=1'
+            if($("#refine_address").val() == ""){
+                refine_filter = refine_filter.replace("&address__icontains=1", "");
+            }
+            else{
+                refine_filter = refine_filter.replace("&address__icontains=1", "&address__icontains="+$("#refine_address").val());
+            }
+            if($("#refine_zipcode").val() == ""){
+                refine_filter = refine_filter.replace("&zip_code__icontains=1", "");
+            }
+            else{
+                refine_filter = refine_filter.replace("&zip_code__icontains=1", "&zip_code__icontains="+$("#refine_zipcode").val());
+            }
+            if($("#refine_property_type").val() == ""){
+                refine_filter = refine_filter.replace("&home_type__icontains=1", "");
+            }
+            else{
+                refine_filter = refine_filter.replace("&home_type__icontains=1", "&home_type__icontains="+$("#refine_property_type").val());
+            }
+            if($("#min_beds").val() == ""){
+                refine_filter = refine_filter.replace("&beds__gte=1", "");
+            }
+            else{
+                refine_filter = refine_filter.replace("&beds__gte=1", "&beds__gte="+$("#min_beds").val());
+            }
+
+            if($("#max_beds").val() == ""){
+                refine_filter = refine_filter.replace("&beds__lte=1", "");
+            }
+            else{
+                refine_filter = refine_filter.replace("&beds__lte=1", "&beds__lte="+$("#max_beds").val());
+            }
+
+            if($("#min_price").val() == ""){
+                refine_filter = refine_filter.replace("&property_value__gte=1", "");
+            }
+            else{
+                refine_filter = refine_filter.replace("&property_value__gte=1", "&property_value__gte="+$("#min_price").val());
+            }
+
+            if($("#max_price").val() == ""){
+                refine_filter = refine_filter.replace("&property_value__lte=1", "");
+            }
+            else{
+                refine_filter = refine_filter.replace("&property_value__lte=1", "&property_value__lte="+$("#max_price").val());
+            }
+
+            if($("#min_baths").val() == ""){
+                refine_filter = refine_filter.replace("&baths__gte=1", "");
+            }
+            else{
+                refine_filter = refine_filter.replace("&baths__gte=1", "&baths__gte="+$("#min_baths").val());
+            }
+
+            if($("#max_baths").val() == ""){
+                refine_filter = refine_filter.replace("&baths__lte=1", "");
+            }
+            else{
+                refine_filter = refine_filter.replace("&baths__lte=1", "&baths__lte="+$("#max_baths").val());
+            }
+
+            if($("#min_sqft").val() == ""){
+                refine_filter = refine_filter.replace("&property_size__gte=1", "");
+            }
+            else{
+                refine_filter = refine_filter.replace("&property_size__gte=1", "&property_size__gte="+$("#min_sqft").val());
+            }
+
+            if($("#max_sqft").val() == ""){
+                refine_filter = refine_filter.replace("&property_size__lte=1", "");
+            }
+            else{
+                refine_filter = refine_filter.replace("&property_size__lte=1", "&property_size__lte="+$("#max_sqft").val());
+            }
+            property_form = 0;
+            property_till = 0;
+            render_property(refine_filter);
+        }
+
+        function reset_refine(){
+            $("#refine_form")[0].reset();
+            refine()
+        }
+
+        jQuery(function($) {
+            var items = $("#results_paginate .page");
+
+            var numItems = items.length;
+            var perPage = 10;
+
+            // only show the first 2 (or "first per_page") items initially
+            items.slice(perPage).hide();
+
+            // now setup pagination
+            $pagination = $("#pagination");
+            $pagination.pagination({
+                items: numItems,
+                itemsOnPage: perPage,
+                cssStyle: "light-theme",
+                onPageClick: function(pageNumber) { // this is where the magic happens
+                    // someone changed page, lets hide/show trs appropriately
+                    var showFrom = perPage * (pageNumber - 1);
+                    var showTo = showFrom + perPage;
+
+                    items.hide() // first hide everything, then show for the new page
+                         .slice(showFrom, showTo).show();
+                }
+            });
+        });
+
+        function render_prev(){
+            set_loading(true);
+            next_flag = false;
+            prev_flag = true;
+            render_property(property_data.previous);
+        }
+
+        function render_next(){
+            set_loading(true);
+            next_flag = true;
+            prev_flag = false;
+            render_property(property_data.next);
+        }
+
+        function search_add(){
+            var address = $("#address").val().trim();
+            var city = $("#city").val().trim();
+            if($("#city").val().trim() == ""){
+                $("#city").css({"border":"1px solid #ff0000","background-color":"#ffeeee"});
+                return false;
+            }
+            else{
+                var city = $("#city").val().trim().replace(", United States", "").split(',');
+                if(city.length >1){
+                    $("#stateSelection").val(city[1].trim());
+                    $("#city").val(city[0]);
+                    return true;
+                }
+                else{
+                    return true;
+                }
+            }
+        }
+
+    </script>
+    <script>
+
+      function geocodeAddress() {
+        for(var i=0; i<property_length; i++){
+            (function(j){
+                geocoder.geocode({'address': property_data.results[i].search_index}, function(results, status) {
+                    if (status === 'OK') {
+                        var html = get_property_snapshot_template(property_data.results[j]);
+                        map.setCenter(results[0].geometry.location);
+                        var marker = new google.maps.Marker({
+                            map: map,
+                            position: results[0].geometry.location,
+                            html: html
+                        });
+                        google.maps.event.addListener(marker, 'mouseover', function() {
+                            infowindow.setContent(this.html);//set the content
+                            infowindow.open(map,this);
+                        });
+                        //google.maps.event.addListener(marker, 'mouseout', function() {
+                        //    infowindow.close(map,this);
+                        //});
+                        map.setZoom(11);
+                    } else {
+                        console.log(' Geocode was not successful for the following reason: ' + status);
+                    }
+                });
+            })(i);
+		}
+		if(property_data.count == 0){
+		    geocoder.geocode({'address': 'California, United States'}, function(results, status) {
+                if (status === 'OK') {
+                    map.setCenter(results[0].geometry.location);
+                } else {
+                    console.log(search_query + ' Geocode was not successful for the following reason: ' + status);
+                }
+            });
+		}
+      }
+
+    var get_property_snapshot_template = function(property_obj){
+        if(property_obj.images.length >= 1){
+            var prop_image = '/static/images/no-image.png';
+            for(var j=0; j<property_obj.images.length; j++){
+                if(property_obj.images[j].image.includes('virtual') === false){
+                    prop_image = property_obj.images[0].image;
+                }
+            }
+        }
+        else{
+            var prop_image = '/static/images/no-image.png'
+        }
+        var template = '<a href="/property/preview/'+property_obj.id+'/" style="color:black;">';
+        template += '<div style="background-image: url('+prop_image+');background-size: cover;float:left;height:85px;width:75px;"></div><div style="float:right;margin-left: 10px;">';
+        if(property_obj.property_title){
+            template += '<h5>'+property_obj.property_title+'</h5>';
+        }
+        else{
+            template += '<br />';
+        }
+        template += '<h5># '+property_obj.address+'</h5>';
+        template += '<div class="price"><u>$'+property_obj.property_value+'</u></div>';
+        template += '<div class="listed">Listed on '+property_obj.listed_on+'</div>';
+        template += '</div>';
+        template += '</a>';
+        return template;
+    }
+    </script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBlRSkdhAeYANHUa2eGtUJHv2gCQ1LHGU&libraries=places&callback=initMap">
+        </script>
+
+    {% endblock footer_scripts %}
+{% endblock content %}

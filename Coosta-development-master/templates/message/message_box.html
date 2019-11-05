@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+
+{% block content %}
+<p></p>
+<br/>
+<br/>
+<style>
+        @media only screen and (min-width : 268px){
+            #col-padding {
+                width: 100%;
+             }
+        }
+
+        @media only screen and (min-width : 768px){
+            #col-padding {
+                width: 80%;
+                padding-right:80px;padding-left:70px;
+            }
+        }
+
+        @media only screen and (min-width : 1200px){
+            #col-padding {
+                width: 100%;
+                padding-right:80px;padding-left:70px;
+            }
+        }
+    </style>
+
+<script src="https://use.fontawesome.com/45e03a14ce.js"></script>
+{% if user.is_authenticated %}
+   <div class="container-fluid" id="col-padding">
+      <div class="col-md-12">
+          <div class="row">
+              <div class="col-md-12 text-center text-uppercase">
+                  <h2 style="color:#3ad4a7;"><b>Messaging</b></h2>
+              </div>
+          </div>
+          <div class="row">
+              <div class="pull-right col-md-4 col-xs-12 col-sm-4" id="custom-search-input" style="background:transparent;">
+                  <div class="input-group" id="search-button" style="z-index: 0;">
+                      <input id="search_chat" type="text" class="search-query form-control" placeholder="Search" style="box-shadow: 0px 0px 3px 3px #eee;z-index: -9;" />
+                      <button class="btn btn-danger" type="button" style="background-color:#3ad4a7;border-color:#3ad4a7;padding: 7px 10px 7px 10px;margin-top: -1px; border-top-left-radius:0px;border-bottom-left-radius:0px;z-index: -9;">
+                          <span class=" glyphicon glyphicon-search" style="color:white;"></span>
+                      </button>
+                  </div>
+              </div>
+          </div>
+          <br/>
+          <div class="row">
+              <div class="col-md-12">
+                  <div class="member_list" style="height:100%;">
+                      <ul id="user_left_panel" class="list-unstyled">
+                          {% for m_user in message_users %}
+                          <li class="left clearfix" id="{{m_user.sender.username}}">
+                              <a href="/message/message_box/{{ m_user.sender.id }}" style="text-decoration:none;color:black;">
+                                  <span class="chat-img pull-left">
+                                      {% if m_user.sender.userprofile.profile_image %}
+                                      <img style="border:solid 2px #3ad4a7;padding: 1px;" class="img-circle" src="{{ m_user.sender.userprofile.profile_image.url }}" alt="">
+                                      {% else %}
+                                      <img style="border:solid 2px #3ad4a7;padding: 1px;" class="img-circle" src="/static/images/unisex_user_logo.png" alt="">
+                                      {% endif %}
+                                  </span>
+                                  <div class="chat-body clearfix">
+                                      <div class="header_sec">
+                                          {% if m_user.sender.firstname %}
+                                              <strong class="primary-font">{{m_user.sender.firstname}} {{ m_user.sender.lastname }}</strong>
+                                              <strong class="pull-right"></strong>
+                                          {% else %}
+                                              <strong class="primary-font">{{m_user.sender|default_if_none:"Anonymous"}}</strong>
+                                              <strong class="pull-right"></strong>
+                                          {% endif %}
+                                      </div>
+                                          <div class="latest_message_sec">
+                                              <p>{{m_user.latest}}</p>
+                                          </div>
+                                  </div>
+                              </a>
+                          </li>
+                          <p></p>
+                          {% endfor %}
+                      </ul>
+                  </div>
+              </div>
+          </div>
+      </div>
+   </div>
+{% endif %}
+<style>
+    #custom-search-input {
+        background: #e8e6e7 none repeat scroll 0 0;
+        margin: 0;
+        padding: 10px;
+    }
+    #custom-search-input .search-query {
+        background: #fff none repeat scroll 0 0 !important;
+        border-radius: 4px;
+        height: 33px;
+        margin-bottom: 0;
+        padding-left: 7px;
+        padding-right: 7px;
+    }
+    #custom-search-input button {
+        background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+        border: 0 none;
+        border-radius: 3px;
+        color: #666666;
+        left: auto;
+        margin-bottom: 0;
+        margin-top: 7px;
+        padding: 2px 5px;
+        position: absolute;
+        right: 0;
+        z-index: 9999;
+    }
+    .search-query:focus + button {
+        z-index: 3;
+    }
+    .member_list li {
+        padding: 6px;
+    }
+    .chat-img img {
+        height: 34px;
+        width: 34px;
+    }
+
+    .member_list li:last-child {
+        border-bottom:none;
+    }
+    .member_list {
+        height: 380px;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+   .member_list .chat-body {
+       margin-left: 47px;
+       margin-top: 0;
+   }
+   .member_list li:hover{
+       background-color: #3ad4a7;
+   }
+</style>
+
+{% block footer_scripts %}
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <!--<script src="/static/js/apis/message_api.js"></script>-->
+    <!--<script src="/static/js/main.js"></script>-->
+    <script type="text/javascript">
+        $("document").ready(function(){
+            sender_id = 0;
+            sender_username = "";
+            current_user = '{{user.username}}';
+            $("#chat_area_box").keypress(function(e) {
+                if(e.which == 13) {
+                    send_chat();
+                }
+            });
+            $("#search_chat").keyup (function(){
+                var search_query = $("#search_chat").val();
+                if(search_query == ""){
+                    $("#user_left_panel li").show();
+                }
+                else{
+                    if($("#"+search_query).length >=1){
+                        sender_id = $("#"+search_query).attr('user_id');
+                        sender_username = search_query;
+                        $(".message_write").show();
+                        $("#user_left_panel li").hide();
+                        $(".messages").hide();
+                        $("#"+search_query).show();
+                        $("."+search_query +"_plus_"+ current_user).show();
+                        $("#user_left_panel > li").css("background-color", "");
+                        $("#"+search_query).css("background-color", "#60eca2");
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock footer_scripts %}
+{% endblock content %}

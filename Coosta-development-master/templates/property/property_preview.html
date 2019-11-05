@@ -1,0 +1,359 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    .side_button {
+        white-space: pre-wrap;
+        white-space: -moz-pre-wrap;
+        white-space: -pre-wrap;
+        white-space: -o-pre-wrap;
+        word-wrap: break-word;
+        height: 100%;
+        font-weight: bold;
+        border-width: 2px;
+        color: black;
+        border-color: #70E0A3;
+        background-color: white;
+    }
+    @media only screen and (min-width : 268px){
+        #property_container {
+            width: 100%;
+         }
+         .btn-edit{
+            margin-top: 2px;
+         }
+         .temp-buttons{
+            text-align: center;
+         }
+         .preview-text{
+            line-height: 11px;
+            font-size: 28px;
+         }
+         .functions-text{
+            font-size: 14px;
+         }
+         .only-preview{
+            text-align: center;
+         }
+    }
+
+    @media only screen and (min-width : 768px){
+        #property_container {
+            width: 100%;
+            position:absolute;
+            margin-top:20px;
+            z-index:10;
+         }
+         .preview-text{
+            line-height: 16px;font-size: 21px;
+         }
+    }
+
+    @media only screen and (min-width : 1200px){
+        #property_container {
+            position:absolute;
+            margin-top:20px;
+            width:100%;
+            z-index:10;
+         }
+         .preview-text{
+            line-height: 16px;font-size: 21px;
+         }
+    }
+</style>
+<p></p>
+<br/>
+<br/>
+<script src="/static/js/slider/jssor.slider-22.2.16.min.js" type="text/javascript"></script>
+<script src="/static/js/slider/gallery_slider.js" type="text/javascript"></script>
+<link rel="stylesheet" href="/static/css/slider/gallery_slider.css">
+<div class="container-fluid">
+    <div id="loaded_content" style="display:none;">
+        <div class="row" id="property_container">
+            <div class="col-md-3 col-sm-1 col-xs-1"></div>
+            <div class="col-md-6 col-sm-9 col-xs-10 shadow-box-01" style="padding:10px 0px 10px 0px;background-color:white;">
+                <div class="col-md-4 col-sm-3 col-xs-12 only-preview">
+                    <span class="preview-text">Preview Only<br />
+                        <span class="function-text" style="font-size:9px;">FUNCTIONS DONT WORK</span>
+                    </span>
+                </div>
+                <div class="col-md-1 col-sm-1 col-xs-12"></div>
+                <div class="col-md-7 col-sm-7 col-xs-12 temp-buttons">
+                    <div class="col-md-5 col-sm-6 col-xs-12">
+                        <button onclick="location.href='/property/preview/{{property_id}}';" class="btn button-1 gradient-bg three-sharp-edge-l" style="color:white;">CLOSE PREVIEW</button>
+                    </div>
+                    <div class="col-md-2 col-sm-2 col-xs-12"></div>
+                    <div class="col-md-5 col-sm-6 col-xs-12">
+                        <button onclick="location.href='/property/my_property/edit/{{property_id}}/';" class="btn button-1 gradient-bg three-sharp-edge-l btn-edit" style="color:white;">&nbsp;&nbsp;&nbsp;EDIT DETAILS&nbsp;&nbsp;&nbsp;</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-xs-12"></div>
+        </div>
+        <div id="jssor_1" style="position:relative;margin:0 auto;top:0px;left:0px;width:800px;height:456px;overflow:hidden;visibility:hidden;background-color:rgba(36,38,46,0);">
+            <div data-u="slides" class="slider" style="cursor:default;position:relative;top:0px;left:0px;width:800px;height:456px;overflow:hidden;">
+            </div>
+            <!-- Thumbnail Navigator -->
+            <div data-u="thumbnavigator" class="jssort01" style="position:absolute;left:700px;top:-22px;width:100px;height:500px;" data-autocenter="2">
+                <!-- Thumbnail Item Skin Begin -->
+                <div data-u="slides" style="cursor: default;">
+                    <div data-u="prototype" class="p">
+                        <div class="w">
+                            <div data-u="thumbnailtemplate" class="t"></div>
+                        </div>
+                        <div class="c"></div>
+                    </div>
+                </div>
+                <!-- Thumbnail Item Skin End -->
+            </div>
+            <!-- Arrow Navigator -->
+            <span data-u="arrowleft" class="jssora05l" style="top:158px;left:8px;width:40px;height:40px;"></span>
+            <span data-u="arrowright" class="jssora05r" style="top:158px;right:8px;width:40px;height:40px;"></span>
+        </div>
+        <!-- #endregion Jssor Slider End -->
+        <br />
+        <div class="property-detils-view row" style="padding:0 30px 0 30px;">
+            <div class="col-md-8">
+                <div class="content-pane">
+                    <h5><span id="property_title"></span></h5>
+                    <p class="address">#&nbsp;<span id="address"></span>,&nbsp;<span id="city"></span>,&nbsp;<span id="state"></span>&nbsp;&nbsp;<span id="zip_code"></span></p>
+                    <div class="price"><p class="price" id="property_value"></p><a href="#">See Estimates <i class="icon-down-arrow"></i></a>
+                    </div>
+
+                    <div class="property-features">
+                        <table class="table" style="border-collapse:collapse;border-spacing:0;">
+                            <tbody style="background-color:#eceeef;">
+                            <tr>
+                                <th style="border-right: solid 3px white;border-bottom: none;">HOME TYPE</th>
+                                <th style="border-right: solid 3px white;border-bottom: none;">BEDS</th>
+                                <th style="border-right: solid 3px white;border-bottom: none;">BATHS</th>
+                                <th style="border-right: solid 3px white;border-bottom: none;">PROPERTY SIZE</th>
+                            </tr>
+                            <tr>
+                                <td style="border-right: solid 3px white;border-bottom: solid 3px white;border-top: none;"><span id="home_type"></span></td>
+                                <td style="border-right: solid 3px white;border-bottom: solid 3px white;border-top: none;"><span id="beds"></span></td>
+                                <td style="border-right: solid 3px white;border-bottom: solid 3px white;border-top: none;"><span id="baths"></span></td>
+                                <td style="border-right: solid 3px white;border-bottom: solid 3px white;border-top: none;"><span id="property_size"></span></td>
+                            </tr>
+                            <tr>
+                                <th style="border-right: solid 3px white;border-bottom: none;">FLOORS</th>
+                                <th style="border-right: solid 3px white;border-bottom: none;">ROOF</th>
+                                <th style="border-right: solid 3px white;border-bottom: none;">BASEMENT</th>
+                                <th style="border-right: solid 3px white;border-bottom: none;">YEAR BUILT</th>
+                            </tr>
+                            <tr>
+                                <td style="border-right: solid 3px white;border-bottom: none;border-top: none;"><span id="floors"></span></td>
+                                <td style="border-right: solid 3px white;border-bottom: none;border-top: none;"><span id="roofs"></span></td>
+                                <td style="border-right: solid 3px white;border-bottom: none;border-top: none;"><span id="basement"></span></td>
+                                <td style="border-right: solid 3px white;border-bottom: none;border-top: none;"><span id="year_built"></span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h6>PROPERTY DESCRIPTION</h6>
+                    <p><pre id="description"></pre></p>
+                    <h6>AMENITIES</h6>
+                    <p><span id="other_features"></span></p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="shadow-box-01">
+                    <div class="pad-3">
+                        {% if user.is_authenticated %}
+                        <div class="link-options">
+                            <a href="#" id="toggle_shortlist_property"><i class="fa fa-heart-o" style="color:#70E0A3;"></i>
+                                <span style="font-size:15px;font-family:sans-serif;margin-top:5px;">Favourite</span>
+                            </a>
+                            <a href="#" style="text-decoration:none;"><i class="fa fa-share-alt" style="color:#70E0A3;"></i>
+                                <span style="font-size:15px;font-family:sans-serif;">Share</span>
+                            </a>
+                            <a href="#" style="text-decoration:none;"><i class="fa fa-fa" style="color:#70E0A3;"></i>
+                                <span style="font-size:15px;font-family:sans-serif;">Report</span>
+                            </a>
+                        </div>
+                        {% endif %}
+                        <div class="profile-section">
+                            <figure class="clearfix">
+                                <img id="owner_profile_image" src="/static/images/unisex_user_logo.png" />
+
+                                <figcaption>
+                                    <p class="name" id="owner_name"></p>
+                                    <!--<span>Red Rocks</span>-->
+                                </figcaption>
+                            </figure>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-6 col-sm-6 col-xs-6">
+                                    <form>
+                                        <input type="hidden" id="owner_id">
+                                        <input type="hidden" id="property_id">
+                                        <button class="btn btn-success side_button">CONTACT OWNER</button>
+                                    </form>
+                                </div>
+
+                                <div class="col-md-6 col-sm-6 col-xs-6">
+                                    <form>
+                                        <button type="button" class="btn btn-success col-md-12 col-sm-12 col-xs-12 side_button" data-toggle="modal">MAKE AN OFFER</button>
+                                    </form>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!--<div class="list-section">-->
+                        <!--<h6>NEARBY</h6>-->
+                        <!--<div class="list">BUS STOP - <strong>0.8 km</strong></div>-->
+                        <!--<div class="list">SCHOOL- <strong>0.8 km</strong></div>-->
+                        <!--<div class="list">HOSPITAL - <strong>0.8 km</strong></div>-->
+                        <!--</div>-->
+                        <div class="list-section">
+                            <h6>DIRECTIONS</h6>
+                        </div>
+                    </div>
+                    <div class="map-view">
+                        <div id="map" style='height:180px; width:100%;'></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+            <!--recommeded-properties-->
+
+        </div>
+    <!--inner-content-wrapper-->
+    <!--content-wrapper-->
+
+
+
+    <!--footer-->
+
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <!--<script src="/static/js/apis/property_apis.js"></script>-->
+    <!--<script src="/static/js/main.js"></script>-->
+
+	<script>
+    var property_data = "";
+    $("document").ready(function(){
+        render_property("{{ property_id }}");
+        var csrftoken = getCookie('csrftoken');
+        var data = { "X-CSRFToken": csrftoken}
+        var url = shortlisted_property_base_url + '?user={{user.id}}&property={{ property_id }}';
+        //var url = shortlisted_property_base_url + '?' + filter;
+        shortlisted_properties = get_shortlisted_properties_raw(data, url);
+        if(shortlisted_properties.count == 0){
+            $("#toggle_shortlist_property").html('<i class="fa fa-heart-o" style="color:#70E0A3;"><span style="font-size:15px;font-family:sans-serif;margin-top:5px;">Favourite</span></i>');
+        }
+        else{
+            $("#toggle_shortlist_property").html('<i class="fa fa-heart" style="color:#70E0A3;"><span style="font-size:15px;font-family:sans-serif;margin-top:5px;">Un Favourite</span></i>');
+        }
+        //Adding PageView for Property
+        var page_view_data= {};
+        page_view_data["property"] = "/api/property/{{property_id}}/";
+        page_view_data["viewed_by"] ="/api/users/{{user.id}}/";
+        add_page_view = post_page_view_for_property(page_view_data);
+        $("#load_content").hide();
+        $("#loaded_content").show();
+    });
+
+    function render_property(filter){
+        var url = property_base_url + filter;
+        property_data = get_property(url).responseJSON;
+        var csrftoken = getCookie('csrftoken');
+        var token = { "X-CSRFToken": csrftoken}
+        var owner_data = property_data.user;
+        var prop_image_list = [];
+        if(property_data.images.length >= 1){
+            var prop_image = '/static/images/no-image.png';
+            for(var j=0; j<property_data.images.length; j++){
+                if(property_data.images[j].image.includes('virtual') === false){
+                    prop_image_list.push(property_data.images[j].image);
+                    prop_image = property_data.images[j].image;
+                }
+            }
+        }
+        else{
+            var prop_image = '/static/images/no-image.png'
+        }
+        if(property_data.property_title != null){
+            $("#property_title").html(property_data.property_title.toString().toUpperCase());
+        }
+        if(owner_data.first_name){
+            $("#owner_name").html(owner_data.first_name);
+        }
+        else{
+            $("#owner_name").html(owner_data.username);
+        }
+        $("#owner_id").val(owner_data.id);
+        $("#property_id").val(property_data.id);
+        //if(owner_data.userprofile != null && owner_data.userprofile.profile_image != null){
+            //$("#owner_profile_image").attr('src', owner_data.userprofile.profile_image);
+        //}
+        $("#property_base_image").attr('src', prop_image);
+        for(var i=0; i<=prop_image_list.length-1; i++){
+            if(i==0){
+                $(".slider").append('<div><img data-u="image" src="'+prop_image_list[i]+'"/><img data-u="thumb" src="'+prop_image_list[i]+'"/></div>');
+            }
+            else{
+                $(".slider").append('<div><img data-u="image" src="'+prop_image_list[i]+'"/><img data-u="thumb" src="'+prop_image_list[i]+'"/></div>');
+            }
+        }
+        if(prop_image_list.length == 0){
+            $(".slider").append('<div><img data-u="image" src="'+prop_image+'"/><img data-u="thumb" src="'+prop_image+'"/></div>');
+        }
+        jssor_1_slider_init();
+        $("#home_type").html(property_data.home_type);
+        $("#beds").html(property_data.beds);
+        $("#baths").html(property_data.baths);
+        $("#property_size").html(property_data.property_size);
+
+        $("#address").html(property_data.address.toUpperCase());
+        $("#city").html(property_data.city.toUpperCase());
+        $("#state").html(property_data.state.toUpperCase());
+        $("#zip_code").html(property_data.zip_code);
+
+        $("#floors").html(property_data.floors);
+        if(property_data.roof){
+            $("#roofs").html("Yes");
+        }
+        else{
+            $("#roofs").html("No");
+        }
+        $("#basement").html(property_data.basement);
+        $("#year_built").html(property_data.year_built);
+
+        $("#description").html(property_data.description);
+        $("#other_features").html(property_data.other_features);
+
+        $("#property_value").html("$"+ property_data.property_value.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+        $("#base_price").html("$"+ property_data.property_value.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+        $("#load_spinner").hide();
+    }
+
+      function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 16,
+          center: {lat: -34.397, lng: 150.644}
+        });
+        var geocoder = new google.maps.Geocoder();
+        $("document").ready(function(){
+            geocodeAddress(geocoder, map, property_data.search_index);
+        });
+      }
+      function geocodeAddress(geocoder, resultsMap, address) {
+        geocoder.geocode({'address': address}, function(results, status) {
+          if (status === 'OK') {
+            resultsMap.setCenter(results[0].geometry.location);
+            var marker = new google.maps.Marker({
+              map: resultsMap,
+              position: results[0].geometry.location
+            });
+          } else {
+            console.log(address + ' Geocode was not successful for the following reason: ' + status);
+          }
+        });
+      }
+    </script>
+
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBlRSkdhAeYANHUa2eGtUJHv2gCQ1LHGU&callback=initMap">
+    </script>
+</div>
+{% endblock content%}

@@ -1,0 +1,591 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .container-fluid .property-panel-heading{
+        background-color: #3AD4A7;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        border-bottom:none;
+    }
+
+    @media only screen and (min-width :268px){
+        .container-fluid .property-panel-title{
+            border-bottom:1px solid #FFFFFF;
+        }
+    }
+    @media only screen and (min-width :768px){
+        .container-fluid .property-panel-title{
+            border-right:1px solid #FFFFFF;
+            border-bottom:none;
+        }
+    }
+    @media only screen and (min-width :1200px){
+        .container-fluid .property-panel-title{
+            border-right:1px solid #FFFFFF;
+            border-bottom:none;
+        }
+    }
+    .container-fluid .property-panel-title > h3{
+        color: #FFFFFF;
+        padding-top: 0px;
+    }
+    .container-fluid .property-panel-title > p{
+        color: #FFFFFF;
+        font-size: 12px;
+    }
+    .container-fluid .property-panel-price > h3{
+        color: #FFFFFF;
+        padding-top:10px;
+    }
+    .container-fluid .property-heading{
+        background-color:#55565A;
+    }
+    .container-fluid .heading-spans{
+        color: #FFFFFF;
+    }
+    .container-fluid .property-heading-name{
+        border-right:1px solid #FFFFFF;
+        padding:15px;
+    }
+    .container-fluid .property-heading-status{
+        padding:15px;
+    }
+    .container-fluid .desc-first{
+        border-right:1px solid #ccc;
+        padding:15px;
+    }
+    .container-fluid .desc-first-container{
+        padding:0px;
+    }
+    .container-fluid .first-container-left{
+        padding:0px;
+    }
+    .container-fluid .first-container-right{
+        padding:6px;
+    }
+
+    @media only screen and (min-width :768px){
+        .container-fluid .desc-second{
+            border-right:1px solid #ccc;
+            padding:55.5px;
+        }
+    }
+    @media only screen and (min-width :868px){
+        .container-fluid .desc-second{
+            border-right:1px solid #ccc;
+            padding:55.5px;
+        }
+    }
+    @media only screen and (min-width :1200px){
+        .container-fluid .desc-second{
+            border-right:1px solid #ccc;
+            padding:28.5px;
+        }
+    }
+    .container-fluid .desc-third{
+        padding:0px;
+    }
+    @media only screen and (min-width :768px){
+        .container-fluid .desc-third-left{
+            padding:45.5px;
+            border-right:1px solid #ccc;
+        }
+        .container-fluid .desc-third-right{
+            padding:41.5px 6.5px;
+        }
+    }
+    @media only screen and (min-width :1200px){
+        .container-fluid .desc-third-left{
+            padding:28.5px;
+            border-right:1px solid #ccc;
+        }
+        .container-fluid .desc-third-right{
+            padding:16px;
+        }
+    }
+    .container-fluid .order-hr{
+        margin-top: 0px;
+        margin-bottom: 10px;
+    }
+    .container-fluid .offer_box{
+        padding-bottom:20px;
+        padding-left:0px;
+    }
+    .container-fluid .counter-offer{
+        padding-left:0px;
+        padding-bottom:20px;
+    }
+    .container-fluid .counter-offer-first{
+        padding-left:0px;
+    }
+    .container-fluid .counter-offer-two{
+        padding-left:0px;
+        margin-top:-11px;
+    }
+    .container-fluid .counter-offer-three{
+        padding-left:0px;
+        margin-top:-11px;
+    }
+    .container-fluid .received-counter-block{
+        padding-left:0px;
+        padding-bottom:20px;
+    }
+    .container-fluid .received-counter-block-btn{
+        padding-left:0px;
+    }
+    .nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+        background-color: #3AD4A7;
+    }
+
+
+</style>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 spa-container">
+            <ul class="nav nav-tabs" style="border: none;margin-top: -11px;">
+              <li class="active col-md-6 col-sm-6 col-xs-6 text-uppercase text-center offer-title"><a data-toggle="tab" href="#buyer_page">Buyer</a></li>
+              <li class="col-md-6 col-sm-6 col-xs-6 text-uppercase text-center offer-title"><a data-toggle="tab" href="#seller_page">Seller</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="buyer_page" class="tab-pane fade in active">
+                    <h2 class="text-uppercase text-center offer-title">
+                        <b>Offers Management</b>
+                    </h2>
+                    <div id="buyer_offers">
+                    </div>
+                </div>
+                <div id="seller_page" class="tab-pane fade">
+                    <h2 class="text-uppercase text-center offer-title">
+                        <b>Offers Management</b>
+                    </h2>
+                    <div id="seller_offers">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% block footer_scripts %}
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script type="text/javascript">
+        var offer_data = "";
+        $("document").ready(function(){
+            var csrftoken = getCookie('csrftoken');
+            var data = { "X-CSRFToken": csrftoken}
+
+            // Render Seller's Offers
+            var url = offers_base_url + '?property__user=' + "{{ user.id}}&ordering=-id";
+            var offer_data = get_offers_on_properties(data, url).responseJSON;
+            if(offer_data.count == 0){
+                $("#seller_offers").html("<h4 class='text-center'>No Offer Received</h4>")
+            }
+            else{
+                render_offer(offer_data, 'seller_offers');
+            }
+
+            //Render Buyer's Offers
+            var url = offers_base_url + '?offered_by=' + "{{ user.id}}&ordering=-id";
+            var offer_data = get_offers_on_properties(data, url).responseJSON;
+            if(offer_data.count == 0){
+                $("#seller_offers").html("<h4 class='text-center'>No Offer Made</h4>")
+            }
+            else{
+                render_offer(offer_data, 'buyer_offers');
+            }
+        });
+
+        function render_offer(offer_data, offer_block){
+            $("#"+offer_block).html("")
+            var rendered_property = [];
+            var csrftoken = getCookie('csrftoken');
+            var csrf_data = { "X-CSRFToken": csrftoken}
+
+            for(var i=0; i<offer_data.count; i++){
+                var url2 = counter_offers_base_url + '?offer__id=' + +offer_data.results[i].id +"&ordering=id";
+                var counter_offer_data = get_counter_offers_on_properties(csrf_data, url2).responseJSON;
+                var last_counter_offer = counter_offer_data.results[counter_offer_data.results.length-1]
+                //Render Contract Detail
+                if(offer_data.results[i].accepted == true){
+                    var url3 = contract_base_url + '?offer__id=' + +offer_data.results[i].id;
+                    var contract_data = get_contract(csrf_data, url3).responseJSON;
+                }
+
+                //conditions to set css for offers from common property
+                if(rendered_property.indexOf(offer_data.results[i].property.id ) != -1){
+                    var template = '<div class="panel panel-default shadow-box-01" style="margin-top:-20px;">';
+                }
+                else{
+                    var template = '<div class="panel panel-default shadow-box-01">';
+                }
+
+                //condition to push offers from common property into same block under common heading
+                if(rendered_property.indexOf(offer_data.results[i].property.id ) === -1){
+                    rendered_property.push(offer_data.results[i].property.id)
+                    template += '<div class="panel-heading property-panel-heading">';
+                    template += '<div class="panel-title">';
+                    template += '<div class="row">';
+                    template += '<div class="col-md-9 col-sm-7 col-xs-12 property-panel-title">';
+                    template += '<h3>'+offer_data.results[i].property.property_title+'</h3>';
+                    template += '<p>'+offer_data.results[i].property.address+'. '+offer_data.results[i].property.city+', '+offer_data.results[i].property.state+' '+offer_data.results[i].property.zip_code+'</p>';
+                    template += '</div>';
+                    template += '<div class="col-md-3 col-sm-5 col-xs-12 property-panel-price">';
+                    template += '<h3 class="text-center">$ '+offer_data.results[i].property.property_value.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+'</h3>';
+                    template += '</div>';
+                    template += '</div>';
+                    template += '</div>';
+                    template += '</div>';
+                    template += '<div style="padding:0px;">';
+                    template += '<div class="col-md-12 col-sm-12 col-xs-12 property-heading">';
+                    template += '<div class="col-md-3 col-sm-3 text-center text-uppercase property-heading-name">';
+                    template += '<span class="heading-spans"><strong>Name</strong></span>';
+                    template += '</div>';
+                    template += '<div class="col-md-3 col-sm-3 text-center text-uppercase property-heading-name">';
+                    template += '<span class="text-center text-uppercase heading-spans"><strong>Offer Price</strong></span>';
+                    template += '</div>';
+                    template += '<div class="col-md-6 col-sm-6 text-center text-uppercase property-heading-status">';
+                    template += '<span class="text-center text-uppercase heading-spans"><strong>Status</strong></span>';
+                    template += '</div>';
+                    template += '</div>';
+                    template += '</div>';
+                }
+                //offer opening block
+                template += '<div class="panel-body" style="padding:0px;">';
+                template += '<div class="col-md-12 col-sm-12 col-xs-12 panel-body-desc">';
+                template += '<div class="col-md-3 col-sm-3 desc-first desc-first'+offer_data.results[i].id+'">';
+                template += '<div class="col-md-12 col-sm-12 col-xs-12 desc-first-container">';
+                template += '<div class="col-md-4 col-sm-6 pull-left first-container-left">';
+                template += '<img class="img-circle" src="/static/images/unisex_user_logo.png" alt="" style="width:45px;height:45px; border-radius:50%;border:solid 2px #3ad4a7;">';
+                template += '</div>';
+                template += '<div class="col-md-8 col-sm-6 text-uppercase first-container-right">';
+                if(offer_block=="buyer_offers"){
+                    template += '<h5 class="buyer-name"><strong>'+offer_data.results[i].property.user.first_name+' '+offer_data.results[i].property.user.last_name+'</strong></h5>';
+                }
+                else{
+                    template += '<h5 class="buyer-name"><strong>'+offer_data.results[i].offered_by.first_name+' '+offer_data.results[i].offered_by.last_name+'</strong></h5>';
+                }
+                template += '</div>';
+                template += '</div>';
+                template += '</div>';
+                template += '<div class="col-md-3 col-sm-3 text-center desc-second desc-second'+offer_data.results[i].id+'">';
+                template += '<span><strong>$'+offer_data.results[i].offer_amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+'</strong></span>';
+                template += '</div>';
+                template += '<div class="col-md-6 col-sm-6 desc-third">';
+                template += '<div class="col-md-12 col-sm-12 col-xs-12">';
+                template += '<div class="col-md-10 col-sm-9 text-center desc-third-left desc-third-left'+offer_data.results[i].id+'">';
+
+                //condition for seller offer page vs buyer offer page on the opening block
+                if(counter_offer_data.count == 0){
+                    if(offer_data.results[i].accepted){
+                        if(offer_block=="buyer_offers"){
+                            template += '<span>Your offer has been accepted at <strong>$'+offer_data.results[i].offer_amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+'</strong> on '+offer_data.results[i].offer_date+'</span>';
+                        }
+                        else{
+                            template += '<span>You accepted the offer at <strong>$'+offer_data.results[i].offer_amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+'</strong> on '+offer_data.results[i].offer_date+'</span>';
+                        }
+                    }
+                    else{
+                        if(offer_block=="buyer_offers"){
+                            template += '<span>You made an offer at <strong>$'+offer_data.results[i].offer_amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+'</strong> on '+offer_data.results[i].offer_date+'</span>';
+                        }
+                        else{
+                            template += '<span>You received an offer at <strong>$'+offer_data.results[i].offer_amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+'</strong> on '+offer_data.results[i].offer_date+'</span>';
+                        }
+                    }
+                }
+                else{
+                    if(offer_data.results[i].accepted){
+                        if(last_counter_offer.offered_by.id == "{{user.id}}"){
+                            template += '<span>Your counter offer has been accepted at <strong>$'+last_counter_offer.counter_offer_amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+'</strong> on '+last_counter_offer.counter_offer_date+'</span>';
+                        }
+                        else{
+                            template += '<span>You accepted the counter offer of <strong>$'+last_counter_offer.counter_offer_amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+'</strong> on '+last_counter_offer.counter_offer_date+'</span>';
+                        }
+                    }
+                    else{
+                        if(last_counter_offer.offered_by.id == "{{user.id}}"){
+                            template += '<span>You made a counter offer at  <strong>$'+last_counter_offer.counter_offer_amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+'</strong> on '+last_counter_offer.counter_offer_date+'</span>';
+                        }
+                        else{
+                            template += '<span>You received a counter offer at <strong>$'+last_counter_offer.counter_offer_amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+'</strong> on '+last_counter_offer.counter_offer_date+'</span>';
+                        }
+                    }
+                }
+
+                template += '</div>';
+                template += '<div class="col-md-2 col-sm-3 desc-third-right">';
+                template += '<i class="fa fa-plus-circle fa-3x pull-right" aria-hidden="true" id="icon'+offer_data.results[i].id+'" style="color:#3ad4a7;cursor:pointer" onclick="myFunction('+offer_data.results[i].id+')"></i>';
+                template += '</div>';
+                template += '</div>';
+                template += '</div>';
+                template += '</div>';
+                template += '<div class="col-md-12 col-sm-12 col-xs-12 panel-body-desc panel-body-desc'+offer_data.results[i].id+'" id="'+offer_data.results[i].id+'" style="display:none;">';
+                template += '<div class="col-md-12 col-sm-12 col-xs-12" style="padding:20px;">';
+                template += '<hr class="offer-hr">';
+                //offer opening block ends here
+
+                //if there is no counter offer
+                if(counter_offer_data.count == 0){
+                    //if offer is accepted without any counter offers
+                    if(offer_data.results[i].accepted){
+                        template += '<div class="col-md-12 col-sm-12 col-xs-12" style="padding-bottom:20px;">';
+                        if(offer_block=="buyer_offers"){
+                            template += '<span>You made an offer at <strong>$'+offer_data.results[i].offer_amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+'</strong> on '+offer_data.results[i].offer_date+'</span>';
+                            template += '<hr>';
+                            template += '<span>Your offer has been accepted at <strong>$'+offer_data.results[i].offer_amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+'</strong> on '+offer_data.results[i].offer_date+'</span><br>';
+                        }
+                        else{
+                            template += '<span>You received an offer at <strong>$'+offer_data.results[i].offer_amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+'</strong> and you accepted it on '+offer_data.results[i].offer_date+'.</span>';
+                        }
+                        template += '<p></p>';
+                        template += '<div class="col-md-4 col-sm-4" style="padding-left:0px;">';
+                        //Checking Contract details
+                        if(contract_data.count>=1){
+                            template += '<span>You have already initiated the Contract Process.</span>';
+                            template += '<hr>';
+                            template += '<a href="/contracts/sign/'+contract_data.results[0].id+'" type="button" class="btn button-1 gradient-bg three-sharp-edge-l text-uppercase"style="color:#FFFFFF;">View Contract</a>';
+                            template += '<br><br>';
+                        }
+                        else{
+                            template += '<button type="button" class="btn button-1 gradient-bg three-sharp-edge-l text-uppercase"style="color:#FFFFFF;" onclick="signContract('+offer_data.results[i].property.id+', '+offer_data.results[i].property.user.id+', '+offer_data.results[i].offered_by.id+', '+offer_data.results[i].id+')">Sign Contract</button>';
+                        }
+                        template += '</div>';
+                        template += '</div>';
+                        template += '<br />';
+                    }
+                    //if offer is not accepted with no counter offer yet
+                    else{
+                        template += '<div class="col-md-12 col-sm-12 col-xs-12 offer_box" id="offer'+offer_data.results[i].id+'">';
+                        if(offer_block=="buyer_offers"){
+                            template += '<span>You made an offer at <strong>$'+offer_data.results[i].offer_amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+'</strong> on '+offer_data.results[i].offer_date+'</span><br>';
+                        }
+                        else{
+                            template += '<span>You received an offer at <strong>$'+offer_data.results[i].offer_amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+'</strong> on '+offer_data.results[i].offer_date+'</span><br>';
+                            template += '<p></p>';
+                            template += '<div class="col-md-8 col-sm-8 received-counter-block">';
+                            template += '<div class="col-md-4 col-sm-6 received-counter-block-btn">';
+                            template += '<button type="button" class="btn button-1 gradient-bg three-sharp-edge-l text-uppercase" data-toggle="modal" data-target="#offer_acceptance_box_'+offer_data.results[i].id+'" style="width:90%;color:#FFFFFF;">Accept</button>';
+                            template += '</div>';
+                            template += '<div class="col-md-4 col-sm-6">';
+                            template += '<button type="button" class="btn button-1 gradient-bg three-sharp-edge-l text-uppercase" onclick="openCounter('+offer_data.results[i].id+')" style="color:#FFFFFF;width:90%;">Counter Offer</button>';
+                            template += '</div>';
+                            template += '</div>';
+                        }
+                        template += '<hr class="offer-hr">';
+                        template += '</div>';
+                    }
+                }
+                else{
+                    template += '<div class="col-md-12 col-sm-12 col-xs-12 offer_box" id="offer'+offer_data.results[i].id+'">';
+                    if(offer_block=="buyer_offers"){
+                        template += '<span>You made an offer at <strong>$'+offer_data.results[i].offer_amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+'</strong> on '+offer_data.results[i].offer_date+'</span><br>';
+                    }
+                    else{
+                        template += '<span>You received an offer at <strong>$'+offer_data.results[i].offer_amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+'</strong> on '+offer_data.results[i].offer_date+'</span><br>';
+                        template += '<p></p>';
+                    }
+                    template += '<hr class="offer-hr">';
+                    template += '</div>';
+                }
+
+                //rendering counter offers details
+                for(var j=0; j<counter_offer_data.count; j++){
+                    if(j==counter_offer_data.count-1){
+                        if(counter_offer_data.results[j].offered_by.id == '{{user.id}}'){
+                            if(offer_data.results[i].accepted){
+                                template += '<span>You made a counter offer at <strong>$'+counter_offer_data.results[j].counter_offer_amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+'</strong> on '+counter_offer_data.results[j].counter_offer_date+'</span><br>';
+                                template += '<hr>';
+                                template += '<span>Your counter offer has been accepted at <strong>$'+counter_offer_data.results[j].counter_offer_amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+'</strong> on '+counter_offer_data.results[j].counter_offer_date+'</span><br>';
+                                template += '<p></p>';
+                                template += '<div class="col-md-4 col-sm-6">';
+                                //checking Contract details
+                                if(contract_data.count>=1){
+                                    template += '<span>You have already initiated the Contract Process.</span>';
+                                    template += '<hr>';
+                                    template += '<a href="/contracts/sign/'+contract_data.results[0].id+'" type="button" class="btn button-1 gradient-bg three-sharp-edge-l text-uppercase"style="color:#FFFFFF;">View Contract</a>';
+                                    template += '<br><br>';
+                                }
+                                else{
+                                    template += '<button type="button" class="btn button-1 gradient-bg three-sharp-edge-l text-uppercase"style="color:#FFFFFF;" onclick="signContract('+offer_data.results[i].property.id+', '+offer_data.results[i].property.user.id+', '+offer_data.results[i].offered_by.id+', '+offer_data.results[i].id+')">Sign Contract</button>';
+                                }
+                                template += '</div>';
+                                template += '</div>';
+                                template += '<p></p>';
+                            }
+                            else{
+                                template += '<span>You made a counter offer at <strong>$'+counter_offer_data.results[j].counter_offer_amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+'</strong> on '+counter_offer_data.results[j].counter_offer_date+'</span><br>';
+                                template += '<p></p>';
+                            }
+                        }
+                        else{
+                            if(offer_data.results[i].accepted){
+                                template += '<span>You received an counter offer at <strong>$'+counter_offer_data.results[j].counter_offer_amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+'</strong> and accepted it on '+counter_offer_data.results[j].counter_offer_date+'.</span>';
+                                template += '<hr>';
+                                template += '<p></p>';
+                                template += '<div class="col-md-4 col-sm-4" style="padding-left:0px;">';
+                                //Checking Contract details
+                                if(contract_data.count>=1){
+                                    template += '<span>You have already initiated the Contract Process.</span>';
+                                    template += '<hr>';
+                                    template += '<a href="/contracts/sign/'+contract_data.results[0].id+'" type="button" class="btn button-1 gradient-bg three-sharp-edge-l text-uppercase"style="color:#FFFFFF;">View Contract</a>';
+                                    template += '<br><br>';
+                                }
+                                else{
+                                    template += '<button type="button" class="btn button-1 gradient-bg three-sharp-edge-l text-uppercase"style="color:#FFFFFF;" onclick="signContract('+offer_data.results[i].property.id+', '+offer_data.results[i].property.user.id+', '+offer_data.results[i].offered_by.id+', '+offer_data.results[i].id+')">Sign Contract</button>';
+                                }
+                                template += '</div>';
+                                template += '</div>';
+                                template += '<p></p>';
+                            }
+                            else{
+                                template += '<span>You received an counter offer at <strong>$'+counter_offer_data.results[j].counter_offer_amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+'</strong> on '+counter_offer_data.results[j].counter_offer_date+'</span>';
+                                template += '<p></p>';
+                                template += '<div class="col-md-8 col-sm-8 received-counter-block">';
+                                template += '<div class="col-md-4 col-sm-6 received-counter-block-btn">';
+                                template += '<button type="button" class="btn button-1 gradient-bg three-sharp-edge-l text-uppercase" data-toggle="modal" data-target="#offer_acceptance_box_'+offer_data.results[i].id+'" style="width:90%;color:#FFFFFF;">Accept</button>';
+                                template += '</div>';
+                                template += '<div class="col-md-4 col-sm-6">';
+                                template += '<button type="button" class="btn button-1 gradient-bg three-sharp-edge-l text-uppercase" onclick="openCounter('+offer_data.results[i].id+')" style="color:#FFFFFF;width:90%;">Counter Offer</button>';
+                                template += '</div>';
+                                template += '</div>';
+                            }
+                        }
+                    }
+                    else{
+                        if(counter_offer_data.results[j].offered_by.id == '{{user.id}}'){
+                            template += '<span>You made a counter offer at <strong>$'+counter_offer_data.results[j].counter_offer_amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+'</strong> on '+counter_offer_data.results[j].counter_offer_date+'</span><br>';
+                            template += '<p></p>';
+                        }
+                        else{
+                            template += '<span>You received an counter offer at <strong>$'+counter_offer_data.results[j].counter_offer_amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+'</strong> on '+counter_offer_data.results[j].counter_offer_date+'</span>';
+                            template += '<p></p>';
+                        }
+                    }
+                }
+                //Make Counter Offer Form
+                template += '<div class="col-md-12 col-sm-12 col-xs-12" id="counter'+offer_data.results[i].id+'" style="padding-bottom:20px;display:none;">';
+                if(counter_offer_data.count != 0){
+                    template += '<span>You received an offer at <strong>$'+counter_offer_data.results[counter_offer_data.count-1].counter_offer_amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+'</strong> and you chose to counter the offer.</span><br>';
+                }
+                else{
+                    template += '<span>You received an offer at <strong>$'+offer_data.results[i].offer_amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')+'</strong> and you chose to counter the offer.</span><br>';
+                }
+                template += '<hr>';
+                template += '<p>Make a counter offer</p>';
+                template += '<div class="col-md-8 col-sm-12 counter-offer">';
+                template += '<form class="">';
+                template += '<div class="col-md-6 col-sm-6 counter-offer-first">';
+                template += '<input type="text" class="form-control" name="counter_amount" id="counter_amount_'+offer_data.results[i].id+'">';
+                template += '<span id="counter_amount_error"></span>';
+                template += '</div>';
+                template += '<div class="col-md-3 col-sm-3 counter-offer-two">';
+                template += '<button type="button" class="btn button-1 gradient-bg three-sharp-edge-l text-uppercase" style="color:#FFFFFF;width:90%;" onclick="counterOffer('+offer_data.results[i].id+', {{user.id}})">Send</button>';
+                template += '</div>';
+                template += '<div class="col-md-3 col-sm-3 counter-offer-three">';
+                template += '<button type="button" class="btn button-1 gradient-bg three-sharp-edge-l text-uppercase" style="color:#FFFFFF;width:90%;" onclick="closeCounterBlock('+offer_data.results[i].id+')">Cancel</button>';
+                template += '</div>';
+                template += '</form>';
+                template += '</div>';
+                template += '</div>';
+                //End of Make Counter Offer Form
+                //Offer Accept Popup Modal
+                template += '<div class="modal fade" id="offer_acceptance_box_'+offer_data.results[i].id+'" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">';
+                template += '<div class="modal-dialog" role="document">';
+                template += '<div class="modal-content">';
+                template += '<div class="modal-body">';
+                template += '<button type="button" class="close" data-dismiss="modal" aria-label="Close">';
+                template += '<span class="span-close" aria-hidden="true">&times;</span>';
+                template += '</button><br>';
+                template += '<h4 class="text-center text-uppercase"> Are you sure?</h4>';
+                template += '<div class="text-center">';
+                template += '<form>';
+                if(offer_data.results[i].final_accepted_offer){
+                    template += '<button type="button" class="btn button-1 gradient-bg three-sharp-edge-l text-uppercase" data-dismiss="modal" style="color:#FFFFFF;width:40%;" onclick="offerAccept('+offer_data.results[i].id+', '+offer_data.results[i].property.id+', '+offer_data.results[i].offered_by.id+', '+offer_data.results[i].final_accepted_offer.id+')">Yes</button>';
+                }
+                else{
+                    template += '<button type="button" class="btn button-1 gradient-bg three-sharp-edge-l text-uppercase" data-dismiss="modal" style="color:#FFFFFF;width:40%;" onclick="offerAccept('+offer_data.results[i].id+', '+offer_data.results[i].property.id+', '+offer_data.results[i].offered_by.id+', '+null+')">Yes</button>';
+                }
+                template += '<button type="button" class="btn button-1 gradient-bg three-sharp-edge-l text-uppercase" data-dismiss="modal" style="color:#FFFFFF;width:40%;margin-left:5px;">No</button>';
+                template += '</form>';
+                template += '</div>';
+                template += '</div>';
+                template += '</div>';
+                template += '</div>';
+                template += '</div>';
+                // End of Offer Accept Popup Modal
+                template += '</div>';
+                template += '</div>';
+                template += '</div>';
+                template += '</div>';
+                template += '</div>';
+                $("#"+offer_block).append(template);
+            };
+        }
+        function myFunction(id) {
+            if($("#"+id).css("display") === "none"){
+                $("#"+id).css("display", "block");
+                $(".desc-first"+id).css("border", "none");
+                $(".desc-second"+id).css("border", "none");
+                $(".desc-third-left"+id).css("border", "none");
+                $("#icon"+id).addClass("fa-minus-circle").removeClass("fa-plus-circle");
+                $("#panel-body-desc"+id).css("border-bottom", "none");
+            }
+            else if($("#"+id).css("display") === "block"){
+                $("#"+id).css("display", "none");
+                $(".desc-first"+id).css("border-right", "1px solid #ccc");
+                $(".desc-second"+id).css("border-right", "1px solid #ccc");
+                $(".desc-third-left"+id).css("border-right", "1px solid #ccc");
+                $("#icon"+id).addClass("fa-plus-circle").removeClass("fa-minus-circle");
+                $("#panel-body-desc"+id).css("border-bottom", "1px solid #ccc");
+            }
+        }
+        function offerAccept(offer_id, property_id, user_id, counter_offer_id){
+            var url = "/api/offers/"+offer_id+"/";
+            var offer_accepted_data = {};
+            offer_accepted_data["property"] = "/api/property/"+property_id+"/";
+            offer_accepted_data["offered_by"] = "/api/users/"+user_id+"/";
+            offer_accepted_data["accepted"] = true;
+            if(counter_offer_id){
+                offer_accepted_data["final_accepted_offer"] = "/api/counteroffer/"+counter_offer_id+"/";
+            }
+            var update_accepted_offer_data = update_offers_on_properties(offer_accepted_data, url);
+            location.reload();
+        }
+        function counterOffer(offer_id, offered_by){
+            var counter_offer_data = {};
+            counter_offer_data["offer"] = "/api/offers/"+offer_id+"/";
+            counter_offer_data["offered_by"] = "/api/users/"+offered_by+"/";
+            counter_offer_data["counter_offer_amount"] = $("#counter_amount_"+offer_id).val();
+            post_counter_offer_data = post_counter_offer_on_properties(counter_offer_data);
+        }
+        function openCounter(id){
+            if($("#offer"+id).css("display") === "block"){
+                //$("#offer"+id).css("display", "none");
+                $("#counter"+id).css("display", "block");
+            }
+        }
+        function closeCounterBlock(box_id){
+            if($("#counter"+box_id).css("display") === "block"){
+                $("#counter"+box_id).css("display", "none");
+                $("#offer"+box_id).css("display", "block");
+            }
+        }
+        //Function for posting Contract
+        function signContract(property_id, seller_id, buyer_id, offer_id){
+            var contract_data = {};
+            contract_data["offer"] = "/api/offers/"+offer_id+"/";
+            contract_data["property"] = "/api/property/"+property_id+"/";
+            contract_data["seller"] = "/api/users/"+seller_id+"/";
+            contract_data["buyer"] = "/api/users/"+buyer_id+"/";
+            contract_data["last_updated_by"] = "/api/users/{{user.id}}/";
+            var post_contract_data = post_contract(contract_data);
+            if(post_contract_data.statusText == "Created"){
+                var contract_id = post_contract_data.responseJSON.id;
+                window.location.assign("/contracts/sign/"+contract_id+"/");
+            }
+
+        }
+
+    </script>
+{% endblock footer_scripts %}
+{% endblock content %}

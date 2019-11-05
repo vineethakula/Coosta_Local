@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<p></p>
+<br/>
+<br/>
+<p></p>
+<br/>
+    <section id="login" class="features-wrapper" style="padding:0px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <div class="form-wrapper">
+                        <form class="form-group" method="post" name="login">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <img src="/static/images/img/main-logo.png" alt="COOSTA">
+                            </div>
+                            <hr>
+                            <div class="form-group">
+                                <label>Thank You! <br />Account Activation link has been sent up to the email address.</label>
+                            </div>
+                            <br>
+                            <div class="btn-wrapper">
+                                <a href="/user/login/?next=/"> <button type="button" class="btn button-1 gradient-bg three-sharp-edge-l ">LOGIN</button></a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-md-4"></div>
+            </div>
+        </div>
+    </section>
+{% endblock content %}

@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <p></p>
+    <header class="header" class="container-fluid">
+        <div class="container-fluid">
+            <div class="row" style="width:100%;">
+                <div class="search-form">
+                    <form class="add-padding" action="/property/list/" method="post" onsubmit="return search_address();" style="background: none;">
+                        <div class="input-group col-md-12" style="display:block;">
+                            <div class="col-md-5" style="padding:0 2px;">
+                                {% csrf_token %}
+                                {% if error %}
+                                    <input id="address" name="address" class="form-control-01 three-sharp-edge-l empty"
+                                           placeholder = " &#xf041;  {{error}}" onkeypress="remove_alert_css_from_textbox('address')"
+                                           style="display: inline-block;">
+                                {% else %}
+                                    <input id="address" name="address" class="form-control-01 three-sharp-edge-l empty"
+                                               placeholder = " &#xf041;  Address" onkeypress="remove_alert_css_from_textbox('address')" style="display: inline-block;">
+                                {% endif %}
+                            </div>
+                            <div class="col-md-3" style="padding:0 2px;">
+                                <input id="city" name="city" class="form-control-01 three-sharp-edge-l empty"
+                                       placeholder = "city"  style="display: inline-block;">
+                            </div>
+                            <div class="col-md-2" style="padding:2px 2px;">
+                                <span>
+                                    <select  class="form-control-01 three-sharp-edge-l empty" name="stateSelection" id="stateSelection"
+                                             style="width:100%;padding:11px;margin-top:-2px;display:inline-block;">
+                                        <!--<option value="0">State</option>-->
+                                        <option value="AK">AK</option>
+                                        <option value="AL">AL</option>
+                                        <option value="AR">AR</option>
+                                        <option value="AS">AS</option>
+                                        <option value="AZ">AZ</option>
+                                        <option value="CA" selected>CA</option>
+                                        <option value="CO">CO</option>
+                                        <option value="CT">CT</option>
+                                        <option value="DC">DC</option>
+                                        <option value="DE">DE</option>
+                                        <option value="FL">FL</option>
+                                        <option value="FM">FM</option>
+                                        <option value="GA">GA</option>
+                                        <option value="GU">GU</option>
+                                        <option value="HI">HI</option>
+                                        <option value="IA">IA</option>
+                                        <option value="ID">ID</option>
+                                        <option value="IL">IL</option>
+                                        <option value="IN">IN</option>
+                                        <option value="KS">KS</option>
+                                        <option value="KY">KY</option>
+                                        <option value="LA">LA</option>
+                                        <option value="MA">MA</option>
+                                        <option value="MD">MD</option>
+                                        <option value="ME">ME</option>
+                                        <option value="MH">MH</option>
+                                        <option value="MI">MI</option>
+                                        <option value="MN">MN</option>
+                                        <option value="MO">MO</option>
+                                        <option value="MP">MP</option>
+                                        <option value="MS">MS</option>
+                                        <option value="MT">MT</option>
+                                        <option value="NC">NC</option>
+                                        <option value="ND">ND</option>
+                                        <option value="NE">NE</option>
+                                        <option value="NH">NH</option>
+                                        <option value="NJ">NJ</option>
+                                        <option value="NM">NM</option>
+                                        <option value="NV">NV</option>
+                                        <option value="NY">NY</option>
+                                        <option value="OH">OH</option>
+                                        <option value="OK">OK</option>
+                                        <option value="OR">OR</option>
+                                        <option value="PA">PA</option>
+                                        <option value="PR">PR</option>
+                                        <option value="PW">PW</option>
+                                        <option value="RI">RI</option>
+                                        <option value="SC">SC</option>
+                                        <option value="SD">SD</option>
+                                        <option value="TN">TN</option>
+                                        <option value="TX">TX</option>
+                                        <option value="UT">UT</option>
+                                        <option value="VA">VA</option>
+                                        <option value="VI">VI</option>
+                                        <option value="VT">VT</option>
+                                        <option value="WA">WA</option>
+                                        <option value="WI">WI</option>
+                                        <option value="WV">WV</option>
+                                        <option value="WY">WY</option>
+                                    </select>
+                                </span>
+                            </div>
+                            <div class="col-md-2" style="padding:0 2px;">
+                                <button type="submit" class="search-button" aria-label="Help" style="border-bottom-left-radius:5px; border-top-left-radius: 5px;">
+                                    <i class="icon-search button-search" style="margin-top:-10px;"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--search-form-->
+        </div>
+    </header>
+<section class="content-wrapper content-padding">
+    <div class="container-fluid">
+        <div class="property-box three-sharp-edge-r" style="background: none;box-shadow: none;margin-top: -7%;">
+            {% if user.is_authenticated %}
+            <a style="width:100%;" href="/property/add/property/" class="btn button1 gradient-bg three-sharp-edge-l">List Property</a>
+            {% else %}
+            <a href="/user/login/?next=/" class="btn button1 gradient-bg three-sharp-edge-l">Login</a>
+            {% endif %}
+
+        </div>
+        <!--property-box-->
+
+    </div>
+</section>
+<section id="sign_up" class="features-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div style="padding-left:20px;padding-right: 20px;text-align:center;">
+                <h2 class="cc-green-3">OUR VISION  </h2>
+                <p style="text-align:justify;text-align:center;">
+                    We believe every homeowner should have the power to confidently manage their own real estate. We provide honest, unbiased advice and education on all types of real estate transactions, bringing full transparency to how it’s all done. Our goal is to arm you with the knowledge and data you need to make better decisions and market your home successfully. We are the new future of real estate and how it should operate.
+                </p>
+            </div>
+            {% if not user.is_authenticated %}
+            <div class="col-md-3 col-md-offset-2">
+                <div class="form-wrapper">
+                    {% csrf_token %}
+                    <div name="home_signup">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Name</label>
+                            <input type="text" id="sign_up_name" name="sign_up_name" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Email</label>
+                            <input type="email" id="sign_up_email" name="sign_up_email" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Choose Password</label>
+                            <input type="password" id="sign_up_password" name="sign_up_password" class="form-control">
+                        </div>
+                        <div class="btn-wrapper">
+                            <button type="button" onclick="home_to_sign_up_page()" class="btn button-1 gradient-bg three-sharp-edge-l ">SIGN UP</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <br />
+            <br />
+        </div>
+    </div>
+</section>
+<!--content-wrapper-->
+<section class="value-proposition ">
+    <div class="container-fluid">
+        <h2>Our goal is to arm you with the knowledge and data you need to make better decisions and market your home successfully.</h2>
+    </div>
+</section>
+<!--value-proposition-->
+    <!--features-wrapper-->
+<div class="steps-view container-fluid">
+            <h2 class="cc-green-3">Steps indicative of the sale process</h2>
+                <div class="row bs-wizard" style="border-bottom:0;">
+                    <div class="col-xs-4 bs-wizard-step complete">
+                        <div class="progress">
+                            <div class="progress-bar"></div>
+                        </div>
+                        <a href="#" class="bs-wizard-dot"></a>
+                        <div class="text-center bs-wizard-stepnum">Step 1</div>
+                        <!--<div class="bs-wizard-info text-center">Lorem ipsum dolor sit amet, luctus sapien massa vivamus leo, vitae conubia morbi mus sodales molestie dui, ac sollicitudin urna vel.</div>-->
+                    </div>
+
+                    <div class="col-xs-4 bs-wizard-step complete">
+                        <div class="progress">
+                            <div class="progress-bar"></div>
+                        </div>
+                        <a href="#" class="bs-wizard-dot"></a>
+                        <div class="text-center bs-wizard-stepnum">Step 2</div>
+                        <!--<div class="bs-wizard-info text-center">Lorem ipsum dolor sit amet, luctus sapien massa vivamus leo, vitae conubia morbi mus sodales molestie dui, ac sollicitudin urna vel.</div>-->
+                    </div>
+
+                    <div class="col-xs-4 bs-wizard-step active">
+                        <div class="progress">
+                            <div class="progress-bar"></div>
+                        </div>
+                        <a href="#" class="bs-wizard-dot"></a>
+                        <div class="text-center bs-wizard-stepnum">Step 3</div>
+                        <!--<div class="bs-wizard-info text-center">Lorem ipsum dolor sit amet, luctus sapien massa vivamus leo, vitae conubia morbi mus sodales molestie dui, ac sollicitudin urna vel.</div>-->
+                    </div>
+                </div>
+            </div>
+            <!--steps-view-->
+
+
+        <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+        <script>
+          var autocomplete;
+          function initAutocomplete() {
+            autocomplete = new google.maps.places.Autocomplete(
+                /** @type {!HTMLInputElement} */(document.getElementById('city')),
+                {
+                  types: ['(cities)'],
+                  componentRestrictions: {country: "us"}
+                });
+            }
+            {% if error %}
+                $("#address").css({"border":"1px solid #ff0000","background-color":"#ffeeee"});
+            {% endif %}
+            $("document").ready(function(){
+                $("#city").focusout(function(){
+                    var city = $("#city").val().trim().replace(", United States", "").split(',');
+                    if(city.length >1){
+                        $("#stateSelection").val(city[1].trim());
+                    }
+                });
+            });
+        </script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBlRSkdhAeYANHUa2eGtUJHv2gCQ1LHGU&libraries=places&callback=initAutocomplete"
+            async defer></script>
+
+{% endblock content %}
